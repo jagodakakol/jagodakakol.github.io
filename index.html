@@ -23,7 +23,50 @@ th, td {
 th {
     background-color: #e6e6e6;
 }
+
+input {
+    width: 90px;
+}
 </style>
+
+<script>
+function calculate() {
+
+    let odczyt1 = []
+    let odczyt2 = []
+    let v = []
+    let vv = []
+
+    for (let i = 0; i < 3; i++) {
+        let o1 = parseFloat(document.getElementById("o1_" + i).value)
+        let o2 = parseFloat(document.getElementById("o2_" + i).value)
+
+        odczyt1.push(o1)
+        odczyt2.push(o2)
+
+        let diff = (o2 - o1)
+        v.push(diff)
+
+        vv.push(diff * diff)
+    }
+
+    let sum_v = 0
+    let sum_vv = 0
+
+    for (let i = 0; i < v.length; i++) {
+        sum_v += v[i]
+        sum_vv += vv[i]
+
+        document.getElementById("v_" + i).innerText = v[i].toFixed(2)
+        document.getElementById("vv_" + i).innerText = vv[i].toFixed(2)
+    }
+
+    let mean_v = sum_v / v.length
+
+    document.getElementById("mean_v").innerText = mean_v.toFixed(2)
+    document.getElementById("sum_vv").innerText = sum_vv.toFixed(2)
+}
+</script>
 
 </head>
 
@@ -39,35 +82,37 @@ th {
 <th>vv</th>
 </tr>
 
+<tr>
+<td><input id="o1_0"></td>
+<td><input id="o2_0"></td>
+<td id="v_0"></td>
+<td id="vv_0"></td>
+</tr>
 
-    <tr>
-        <td>60.2702</td>
-        <td>260.2679</td>
-        <td>-0.67</td>
-        <td>0.45</td>
-    </tr>
-    
-    <tr>
-        <td>60.2706</td>
-        <td>260.2688</td>
-        <td>1.83</td>
-        <td>3.35</td>
-    </tr>
-    
-    <tr>
-        <td>60.271</td>
-        <td>260.2686</td>
-        <td>-1.17</td>
-        <td>1.37</td>
-    </tr>
-    
+<tr>
+<td><input id="o1_1"></td>
+<td><input id="o2_1"></td>
+<td id="v_1"></td>
+<td id="vv_1"></td>
+</tr>
+
+<tr>
+<td><input id="o1_2"></td>
+<td><input id="o2_2"></td>
+<td id="v_2"></td>
+<td id="vv_2"></td>
+</tr>
 
 </table>
 
 <br>
 
-<b>Mean v:</b> -0.0 <br>
-<b>Sum vv:</b> 5.17
+<button onclick="calculate()">Calculate</button>
+
+<br><br>
+
+<b>Mean v:</b> <span id="mean_v"></span><br>
+<b>Sum vv:</b> <span id="sum_vv"></span>
 
 </body>
 </html>

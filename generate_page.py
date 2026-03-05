@@ -1,55 +1,74 @@
-import statistics
+# Generate interactive HTML page
 
-# Example input values
-odczyt1 = [60.2702, 60.2706, 60.2710]
-odczyt2 = [260.2679, 260.2688, 260.2686]
-
-# Calculations
-v = [-0.67, 1.83, -1.17]
-vv = [round(x**2, 2) for x in v]
-
-mean_v = round(statistics.mean(v), 2)
-sum_vv = round(sum(vv), 2)
-
-# Build table rows
-rows = ""
-for i in range(len(odczyt1)):
-    rows += f"""
-    <tr>
-        <td>{odczyt1[i]}</td>
-        <td>{odczyt2[i]}</td>
-        <td>{v[i]}</td>
-        <td>{vv[i]}</td>
-    </tr>
-    """
-
-# Full HTML page
-html = f"""
+html = """
 <!DOCTYPE html>
 <html>
 <head>
 <title>Dane inklinacja</title>
 
 <style>
-body {{
+body {
     font-family: Arial;
     padding: 40px;
-}}
+}
 
-table {{
+table {
     border-collapse: collapse;
-}}
+}
 
-th, td {{
+th, td {
     border: 1px solid black;
     padding: 8px 14px;
     text-align: center;
-}}
+}
 
-th {{
+th {
     background-color: #e6e6e6;
-}}
+}
+
+input {
+    width: 90px;
+}
 </style>
+
+<script>
+function calculate() {
+
+    let odczyt1 = []
+    let odczyt2 = []
+    let v = []
+    let vv = []
+
+    for (let i = 0; i < 3; i++) {
+        let o1 = parseFloat(document.getElementById("o1_" + i).value)
+        let o2 = parseFloat(document.getElementById("o2_" + i).value)
+
+        odczyt1.push(o1)
+        odczyt2.push(o2)
+
+        let diff = (o2 - o1)
+        v.push(diff)
+
+        vv.push(diff * diff)
+    }
+
+    let sum_v = 0
+    let sum_vv = 0
+
+    for (let i = 0; i < v.length; i++) {
+        sum_v += v[i]
+        sum_vv += vv[i]
+
+        document.getElementById("v_" + i).innerText = v[i].toFixed(2)
+        document.getElementById("vv_" + i).innerText = vv[i].toFixed(2)
+    }
+
+    let mean_v = sum_v / v.length
+
+    document.getElementById("mean_v").innerText = mean_v.toFixed(2)
+    document.getElementById("sum_vv").innerText = sum_vv.toFixed(2)
+}
+</script>
 
 </head>
 
@@ -65,20 +84,42 @@ th {{
 <th>vv</th>
 </tr>
 
-{rows}
+<tr>
+<td><input id="o1_0"></td>
+<td><input id="o2_0"></td>
+<td id="v_0"></td>
+<td id="vv_0"></td>
+</tr>
+
+<tr>
+<td><input id="o1_1"></td>
+<td><input id="o2_1"></td>
+<td id="v_1"></td>
+<td id="vv_1"></td>
+</tr>
+
+<tr>
+<td><input id="o1_2"></td>
+<td><input id="o2_2"></td>
+<td id="v_2"></td>
+<td id="vv_2"></td>
+</tr>
 
 </table>
 
 <br>
 
-<b>Mean v:</b> {mean_v} <br>
-<b>Sum vv:</b> {sum_vv}
+<button onclick="calculate()">Calculate</button>
+
+<br><br>
+
+<b>Mean v:</b> <span id="mean_v"></span><br>
+<b>Sum vv:</b> <span id="sum_vv"></span>
 
 </body>
 </html>
 """
 
-# Write file
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(html)
 
