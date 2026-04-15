@@ -299,7 +299,6 @@ function calcInklinacja() {
     let n = e_values.length;
     let m_odcz = n > 1 ? Math.sqrt(sum_vv / (n * (n - 1))) : 0;
     
-    // Wzór dokładny jak u koleżanki:
     let i_cc = (mean_e * tanZ) - (c_cc / cosZ);
     let m_i_cc = Math.sqrt(Math.pow(tanZ, 2) * Math.pow(m_odcz, 2) + Math.pow(1/cosZ, 2) * Math.pow(m_c_cc, 2));
     
@@ -558,7 +557,7 @@ function generateStaff() {
       <button class="tablinks active" onclick="switchTab(event, 'Kolimacja')">Kolimacja</button>
       <button class="tablinks" onclick="switchTab(event, 'Inklinacja')">Inklinacja</button>
       <button class="tablinks" onclick="switchTab(event, 'Atmosfera')">Atmosfera</button>
-      <button class="tablinks" onclick="switchTab(event, 'Import')">Terminal RS-232</button>
+      <button class="tablinks" onclick="switchTab(event, 'Import')">Import danych</button>
       <button class="tablinks" onclick="switchTab(event, 'Lata')">Łata kodowa</button>
     </div>
 
@@ -583,13 +582,13 @@ function generateStaff() {
         <div class="panel" style="margin-top: 20px;">
             <h3>Zestawienie błędów:</h3>
             <b>Średnia kolimacja (c):</b> <span id="k_mean_c" style="color:#e74c3c; font-weight:bold;">-</span><br>
-            <b>Błąd kolimacji (mc):</b> <span id="k_m_c" style="color:#e74c3c; font-weight:bold;">-</span>
+            <b>Błąd kolimacji (m<sub>c</sub>):</b> <span id="k_m_c" style="color:#e74c3c; font-weight:bold;">-</span>
         </div>
 
         <div class="panel">
             <h3 class="step-title">2. Parametry do odczytu bezkolimacyjnego</h3>
             <div class="input-row">
-                <label>Odczyt koła poziomego (H'c) [g]:</label>
+                <label>Odczyt koła poziomego (H'<sub>c</sub>) [g]:</label>
                 <input type="number" step="any" id="k_input_hz" value="159.9900" placeholder="np. 150.1234">
             </div>
             <div class="input-row">
@@ -630,7 +629,7 @@ function generateStaff() {
                 <input type="number" step="any" id="ink_kolimacja_input" value="0">
             </div>
             <div class="input-row">
-                <label>Błąd kolimacji (m_c) [cc]:</label>
+                <label>Błąd kolimacji (m<sub>c</sub>) [cc]:</label>
                 <input type="number" step="any" id="ink_m_c_input" value="0">
             </div>
             
@@ -640,7 +639,7 @@ function generateStaff() {
         <div class="panel">
             <h3>Zestawienie błędów:</h3>
             <b>Inklinacja (i):</b> <span id="i_mean" style="color:#e74c3c; font-weight:bold;">-</span><br>
-            <b>Błąd inklinacji (mi):</b> <span id="i_error" style="color:#e74c3c; font-weight:bold;">-</span>
+            <b>Błąd inklinacji (m<sub>i</sub>):</b> <span id="i_error" style="color:#e74c3c; font-weight:bold;">-</span>
         </div>
 
         <div class="panel">
@@ -671,8 +670,8 @@ function generateStaff() {
                 <div class="panel">
                     <h3>Parametry Środowiska</h3>
                     Długość fali λ [nm]: <input type="number" id="atm_lambda" value="900"><br><br>
-                    Temp. sucha t_s [°C]: <input type="number" step="any" id="atm_t_dry" value="15"><br><br>
-                    Temp. mokra t_m [°C] <i>(opcj.)</i>: <input type="number" step="any" id="atm_t_wet" placeholder="puste = 0 wilg."><br><br>
+                    Temp. sucha t<sub>s</sub> [°C]: <input type="number" step="any" id="atm_t_dry" value="15"><br><br>
+                    Temp. mokra t<sub>m</sub> [°C] <i>(opcj.)</i>: <input type="number" step="any" id="atm_t_wet" placeholder="puste = 0 wilg."><br><br>
                     Ciśnienie p [hPa]: <input type="number" step="any" id="atm_p" value="1013.25"><br><br>
                     Zmierzona odległość D [m]: <input type="number" step="any" id="atm_d0" value="1000"><br><br>
                     <button class="btn btn-action" onclick="calcAtmosfera()">Koryguj Długość</button>
@@ -690,12 +689,12 @@ function generateStaff() {
 
         <div id="Atm_Plik" class="sub-tabcontent">
             <div class="panel">
-                <h3>Wczytaj plik (D, t_s, [t_m], p)</h3>
+                <h3>Wczytaj plik (D, t<sub>s</sub>, [t<sub>m</sub>], p)</h3>
                 <p>Zwróć uwagę, aby stała długość fali λ była najpierw wpisana w zakładce "Obliczenia".</p>
                 <input type="file" accept=".txt,.csv" onchange="loadFileAtm(event)"><br><br>
                 <div style="max-height: 400px; overflow-y: auto;">
                     <table id="atm_file_table" style="display:none;">
-                        <thead><tr><th>D [m]</th><th>t_s [°C]</th><th>t_m [°C]</th><th>p [hPa]</th><th>e [hPa]</th><th>Poprawka [ppm]</th><th>Poprawione D [m]</th></tr></thead>
+                        <thead><tr><th>D [m]</th><th>t<sub>s</sub> [°C]</th><th>t<sub>m</sub> [°C]</th><th>p [hPa]</th><th>e [hPa]</th><th>Poprawka [ppm]</th><th>Poprawione D [m]</th></tr></thead>
                         <tbody id="atm_file_tbody"></tbody>
                     </table>
                 </div>
