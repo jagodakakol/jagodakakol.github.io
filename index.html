@@ -2,50 +2,56 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<title>Kalkulator Geodezyjny - Pełen Pakiet</title>
+<title>Kalkulator Geodezyjny - Kolimacja, Inklinacja, Atmosfera</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; background-color: #f4f7f6; color: #333; }
-    h1 { color: #2c3e50; text-align: center; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; background-color: #f1f8e9; color: #1b5e20; }
+    h1 { color: #2e7d32; text-align: center; }
     
     /* Tabs Styles */
-    .tab { overflow: hidden; border: 1px solid #ccc; background-color: #e0e6ed; border-radius: 5px 5px 0 0; display: flex; flex-wrap: wrap; }
-    .tab button { background-color: inherit; float: left; border: none; outline: none; cursor: pointer; padding: 14px 24px; transition: 0.3s; font-size: 16px; font-weight: bold; color: #555; }
-    .tab button:hover { background-color: #cfd9e5; }
-    .tab button.active { background-color: #fff; color: #2980b9; border-bottom: 3px solid #2980b9; }
-    .tabcontent { display: none; padding: 20px; border: 1px solid #ccc; border-top: none; background-color: #fff; border-radius: 0 0 5px 5px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+    .tab { overflow: hidden; border: 1px solid #a5d6a7; background-color: #c8e6c9; border-radius: 5px 5px 0 0; display: flex; flex-wrap: wrap; }
+    .tab button { background-color: inherit; float: left; border: none; outline: none; cursor: pointer; padding: 14px 24px; transition: 0.3s; font-size: 16px; font-weight: bold; color: #388e3c; }
+    .tab button:hover { background-color: #a5d6a7; }
+    .tab button.active { background-color: #fff; color: #1b5e20; border-bottom: 3px solid #2e7d32; }
+    
+    .tabcontent { display: none; padding: 20px; border: 1px solid #a5d6a7; border-top: none; background-color: #fff; border-radius: 0 0 5px 5px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
     
     /* Sub-tabs Styles */
-    .sub-tab { overflow: hidden; margin-bottom: 15px; border-bottom: 1px solid #ddd; }
-    .sub-tab button { background-color: transparent; float: left; border: none; outline: none; cursor: pointer; padding: 10px 20px; transition: 0.3s; font-size: 14px; color: #666; }
-    .sub-tab button.active { color: #e67e22; font-weight: bold; border-bottom: 2px solid #e67e22; }
+    .sub-tab { overflow: hidden; margin-bottom: 15px; border-bottom: 1px solid #c8e6c9; }
+    .sub-tab button { background-color: transparent; float: left; border: none; outline: none; cursor: pointer; padding: 10px 20px; transition: 0.3s; font-size: 14px; color: #4caf50; }
+    .sub-tab button.active { color: #1b5e20; font-weight: bold; border-bottom: 2px solid #2e7d32; }
     .sub-tabcontent { display: none; padding: 15px 0; }
 
     table { border-collapse: collapse; width: 100%; margin-top: 15px; margin-bottom: 15px; }
-    th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
-    th { background-color: #f8f9fa; color: #333; }
-    input[type="text"], input[type="number"], select { width: 120px; padding: 6px; border: 1px solid #ccc; border-radius: 3px; text-align: center; }
+    th, td { border: 1px solid #c8e6c9; padding: 10px; text-align: center; }
+    th { background-color: #f1f8e9; color: #1b5e20; }
     
-    .btn { background-color: #2980b9; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px; font-size: 14px; margin: 5px 0; font-weight: bold;}
-    .btn:hover { background-color: #1f6391; }
-    .btn-danger { background-color: #e74c3c; }
-    .btn-danger:hover { background-color: #c0392b; }
-    .btn-success { background-color: #27ae60; }
-    .btn-success:hover { background-color: #219653; }
-    .btn-warning { background-color: #f39c12; }
-    .btn-warning:hover { background-color: #e67e22; }
+    input[type="text"], input[type="number"], select { width: 120px; padding: 6px; border: 1px solid #a5d6a7; border-radius: 3px; text-align: center; color: #1b5e20; }
+    input:focus { outline: none; border-color: #2e7d32; box-shadow: 0 0 5px rgba(46, 125, 50, 0.2); }
     
-    .panel { background: #fdfdfd; padding: 15px; border: 1px solid #eee; border-left: 4px solid #2980b9; margin-bottom: 20px; }
+    .btn { background-color: #4caf50; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px; font-size: 14px; margin: 5px 0; font-weight: bold; transition: 0.2s; }
+    .btn:hover { background-color: #388e3c; }
+    
+    /* Różne odcienie zieleni dla akcji */
+    .btn-danger { background-color: #1b5e20; } /* Ciemna zieleń zamiast czerwieni */
+    .btn-danger:hover { background-color: #003300; }
+    
+    .btn-success { background-color: #2e7d32; }
+    .btn-success:hover { background-color: #1b5e20; }
+    
+    .btn-warning { background-color: #8bc34a; } /* Limonkowa zieleń zamiast pomarańczu */
+    .btn-warning:hover { background-color: #689f38; }
+    
+    .panel { background: #f9fdf9; padding: 15px; border: 1px solid #e8f5e9; border-left: 4px solid #2e7d32; margin-bottom: 20px; }
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     
-    /* Terminal Styles */
-    .terminal { width: 100%; height: 250px; background-color: #1e1e1e; color: #2ecc71; font-family: monospace; padding: 10px; border-radius: 5px; resize: vertical; box-sizing: border-box; }
-    .settings-row { margin-bottom: 10px; }
+    /* Terminal Styles - zachowujemy zielony na czarnym, bo pasuje idealnie */
+    .terminal { width: 100%; height: 250px; background-color: #001a00; color: #7cfc00; font-family: monospace; padding: 10px; border-radius: 5px; resize: vertical; box-sizing: border-box; border: 1px solid #2e7d32; }
     
     /* Łata Styles */
     .lat-container { display: flex; gap: 20px; flex-wrap: wrap; }
     .lat-table { flex: 1; max-height: 500px; overflow-y: auto; }
-    .lat-canvas-box { flex: 1; text-align: center; background: #ecf0f1; border: 1px solid #bdc3c7; padding: 10px; max-height: 500px; overflow-y: auto; }
+    .lat-canvas-box { flex: 1; text-align: center; background: #f1f8e9; border: 1px solid #c8e6c9; padding: 10px; max-height: 500px; overflow-y: auto; }
 </style>
 
 <script>
@@ -69,14 +75,12 @@ function switchSubTab(evt, tabName) {
     if(tabName === 'Atm_Wykres') drawAtmChart();
 }
 
-// --- KOLIMACJA ---
+// --- LOGIKA KOLIMACJI ---
 let kolimacjaRowCount = 0;
-
 function addKolimacjaRow(o1 = '', o2 = '') {
     let table = document.getElementById("kolimacja_table").getElementsByTagName('tbody')[0];
     let row = table.insertRow();
     row.id = "k_row_" + kolimacjaRowCount;
-    
     row.insertCell(0).innerText = kolimacjaRowCount + 1;
     row.insertCell(1).innerHTML = `<input type="number" step="any" id="k_o1_${kolimacjaRowCount}" value="${o1}">`;
     row.insertCell(2).innerHTML = `<input type="number" step="any" id="k_o2_${kolimacjaRowCount}" value="${o2}">`;
@@ -84,7 +88,6 @@ function addKolimacjaRow(o1 = '', o2 = '') {
     row.insertCell(4).innerHTML = `<span id="k_v_${kolimacjaRowCount}">-</span>`;
     row.insertCell(5).innerHTML = `<span id="k_vv_${kolimacjaRowCount}">-</span>`;
     row.insertCell(6).innerHTML = `<button class="btn btn-danger" onclick="removeRow('k_row_${kolimacjaRowCount}')">Usuń</button>`;
-    
     kolimacjaRowCount++;
 }
 
@@ -97,42 +100,30 @@ function calcKolimacja() {
     let c_values = [];
     let table = document.getElementById("kolimacja_table").getElementsByTagName('tbody')[0];
     let rows = table.rows;
-    
     for (let i = 0; i < rows.length; i++) {
         let id_num = rows[i].id.split('_')[2];
         let o1 = parseFloat(document.getElementById("k_o1_" + id_num).value);
         let o2 = parseFloat(document.getElementById("k_o2_" + id_num).value);
-        
         if (!isNaN(o1) && !isNaN(o2)) {
-            let diff = o2 - o1; 
-            if (diff < 0) diff += 400; 
+            let diff = o2 - o1; if (diff < 0) diff += 400; 
             let c = ((diff - 200) / 2) * 10000; 
             c_values.push({id: id_num, c: c});
             document.getElementById("k_c_" + id_num).innerText = c.toFixed(2);
         }
     }
-    
     if (c_values.length === 0) return alert("Brak poprawnych danych!");
-
-    let sum_c = 0;
-    c_values.forEach(item => sum_c += item.c);
+    let sum_c = 0; c_values.forEach(item => sum_c += item.c);
     let mean_c = sum_c / c_values.length;
-    
     let sum_vv = 0;
     c_values.forEach(item => {
-        let v = item.c - mean_c;
-        let vv = v * v;
-        sum_vv += vv;
+        let v = item.c - mean_c; let vv = v * v; sum_vv += vv;
         document.getElementById("k_v_" + item.id).innerText = v.toFixed(2);
         document.getElementById("k_vv_" + item.id).innerText = vv.toFixed(2);
     });
-    
     let n = c_values.length;
     let m_c = n > 1 ? Math.sqrt(sum_vv / (n * (n - 1))) : 0;
-    
     document.getElementById("k_mean_c").innerText = mean_c.toFixed(2) + " cc";
     document.getElementById("k_m_c").innerText = m_c.toFixed(2) + " cc";
-    
     document.getElementById("ink_kolimacja_input").value = mean_c.toFixed(2);
     document.getElementById("ink_m_c_input").value = m_c.toFixed(2);
     window.currentKolimacjaCC = mean_c;
@@ -142,22 +133,16 @@ function correctAnglesCol() {
     let hz = parseFloat(document.getElementById("k_input_hz").value);
     let v = parseFloat(document.getElementById("k_input_v").value);
     let c_cc = window.currentKolimacjaCC || 0;
-    
     if (isNaN(hz) || isNaN(v)) return alert("Wprowadź poprawne kąty Hz i V.");
-    
     let v_rad = v * Math.PI / 200; 
     let poprawka = (c_cc / 10000) / Math.sin(v_rad);
     let hz_corr = hz + poprawka; 
-    
-    if (hz_corr >= 400) hz_corr -= 400; 
-    if (hz_corr < 0) hz_corr += 400;
-    
+    if (hz_corr >= 400) hz_corr -= 400; if (hz_corr < 0) hz_corr += 400;
     document.getElementById("k_corrected_hz").innerText = hz_corr.toFixed(4) + " g";
 }
 
 function loadFileCol(event) {
-    let file = event.target.files[0];
-    if (!file) return;
+    let file = event.target.files[0]; if (!file) return;
     let reader = new FileReader();
     reader.onload = function(e) {
         let lines = e.target.result.split(/\r?\n/);
@@ -175,92 +160,54 @@ function loadFileCol(event) {
 
 // --- INKLINACJA ---
 let inklinacjaRowCount = 0;
-
 function addInklinacjaRow(o1 = '', o2 = '') {
     let table = document.getElementById("inklinacja_table").getElementsByTagName('tbody')[0];
     let row = table.insertRow();
     row.id = "i_row_" + inklinacjaRowCount;
-    
     row.insertCell(0).innerText = "Cel Wysoki";
     row.insertCell(1).innerHTML = `<input type="number" step="any" id="i_o1_${inklinacjaRowCount}" value="${o1}">`;
     row.insertCell(2).innerHTML = `<input type="number" step="any" id="i_o2_${inklinacjaRowCount}" value="${o2}">`;
     row.insertCell(3).innerHTML = `<span id="i_v_${inklinacjaRowCount}">-</span>`;
     row.insertCell(4).innerHTML = `<span id="i_vv_${inklinacjaRowCount}">-</span>`;
     row.insertCell(5).innerHTML = `<button class="btn btn-danger" onclick="removeRow('i_row_${inklinacjaRowCount}')">Usuń</button>`;
-    
     inklinacjaRowCount++;
-}
-
-function loadFileInc(event) {
-    let file = event.target.files[0];
-    if (!file) return;
-    let reader = new FileReader();
-    reader.onload = function(e) {
-        let lines = e.target.result.split(/\r?\n/);
-        lines.forEach(line => {
-            let parts = line.trim().split(/[\s,;]+/);
-            if (parts.length >= 2) {
-                let o1 = parseFloat(parts[0].replace(',', '.'));
-                let o2 = parseFloat(parts[1].replace(',', '.'));
-                if (!isNaN(o1) && !isNaN(o2)) addInklinacjaRow(o1, o2);
-            }
-        });
-    };
-    reader.readAsText(file);
 }
 
 function calcInklinacja() {
     let z_grad = parseFloat(document.getElementById("ink_z").value);
     let c_cc = parseFloat(document.getElementById("ink_kolimacja_input").value) || 0;
     let m_c_cc = parseFloat(document.getElementById("ink_m_c_input").value) || 0;
-    
     if (isNaN(z_grad)) return alert("Podaj kąt zenitalny Z.");
-    
     let z_rad = z_grad * Math.PI / 200;
-    let tanZ = Math.tan(z_rad);
-    let cosZ = Math.cos(z_rad);
-    
+    let tanZ = Math.tan(z_rad); let cosZ = Math.cos(z_rad);
     let table = document.getElementById("inklinacja_table").getElementsByTagName('tbody')[0];
     let rows = table.rows;
     let e_values = [];
-    
     for (let idx = 0; idx < rows.length; idx++) {
         let id_num = rows[idx].id.split('_')[2];
         let o1 = parseFloat(document.getElementById("i_o1_" + id_num).value);
         let o2 = parseFloat(document.getElementById("i_o2_" + id_num).value);
-        
         if (!isNaN(o1) && !isNaN(o2)) {
-            let diff = o2 - o1;
-            if (diff < 0) diff += 400;
+            let diff = o2 - o1; if (diff < 0) diff += 400;
             let e_cc = ((diff - 200) / 2) * 10000;
             e_values.push({id: id_num, e: e_cc});
         }
     }
-    
     if (e_values.length === 0) return alert("Brak danych!");
-    
-    let sum_e = 0;
-    e_values.forEach(item => sum_e += item.e);
+    let sum_e = 0; e_values.forEach(item => sum_e += item.e);
     let mean_e = sum_e / e_values.length;
-    
     let sum_vv = 0;
     e_values.forEach(item => {
-        let v = item.e - mean_e;
-        let vv = v * v;
-        sum_vv += vv;
+        let v = item.e - mean_e; let vv = v * v; sum_vv += vv;
         document.getElementById("i_v_" + item.id).innerText = v.toFixed(2);
         document.getElementById("i_vv_" + item.id).innerText = vv.toFixed(2);
     });
-    
     let n = e_values.length;
     let m_odcz = n > 1 ? Math.sqrt(sum_vv / (n * (n - 1))) : 0;
-    
     let i_cc = (mean_e * tanZ) - (c_cc / cosZ);
     let m_i_cc = Math.sqrt(Math.pow(tanZ, 2) * Math.pow(m_odcz, 2) + Math.pow(1/cosZ, 2) * Math.pow(m_c_cc, 2));
-    
     document.getElementById("i_mean").innerText = i_cc.toFixed(2) + " cc";
     document.getElementById("i_error").innerText = m_i_cc.toFixed(2) + " cc";
-    
     window.currentInklinacjaCC = i_cc;
 }
 
@@ -269,15 +216,10 @@ function correctAnglesInc() {
     let v = parseFloat(document.getElementById("i_input_v").value);
     let c_cc = parseFloat(document.getElementById("ink_kolimacja_input").value) || 0;
     let i_cc = window.currentInklinacjaCC || 0;
-    
     if (isNaN(hz) || isNaN(v)) return alert("Wprowadź poprawne kąty Hz i V.");
-    
     let v_rad = v * Math.PI / 200; 
     let hz_corr = hz + ((c_cc/10000) / Math.sin(v_rad)) + ((i_cc/10000) / Math.tan(v_rad));
-    
-    if (hz_corr >= 400) hz_corr -= 400; 
-    if (hz_corr < 0) hz_corr += 400;
-    
+    if (hz_corr >= 400) hz_corr -= 400; if (hz_corr < 0) hz_corr += 400;
     document.getElementById("i_corrected_hz").innerText = hz_corr.toFixed(4) + " g";
 }
 
@@ -286,7 +228,6 @@ function getNg0(lambda_nm) {
     let L = lambda_nm / 1000; 
     return 287.6155 + (4.8866 / Math.pow(L, 2)) + (0.0680 / Math.pow(L, 4)); 
 }
-
 function getPPM(Ng0, t_dry, t_wet_str, p) { 
     let T = t_dry + 273.15;
     let e = 0;
@@ -299,24 +240,16 @@ function getPPM(Ng0, t_dry, t_wet_str, p) {
     let N_gs = (Ng0 * 0.269578 * (1013.25 / 288.15)) - (11.27 * (10.87 / 288.15));
     return { ppm: N_gs - N_gr, e_val: e, n_gr: N_gr }; 
 }
-
 function calcAtmosfera() {
     let lambda_nm = parseFloat(document.getElementById("atm_lambda").value);
     let t_dry = parseFloat(document.getElementById("atm_t_dry").value);
     let t_wet_str = document.getElementById("atm_t_wet").value;
     let p = parseFloat(document.getElementById("atm_p").value);
     let d0 = parseFloat(document.getElementById("atm_d0").value);
-    
-    if (isNaN(lambda_nm) || isNaN(t_dry) || isNaN(p) || isNaN(d0)) {
-        return alert("Wypełnij wymagane pola (Długość fali, Temp, Ciśnienie, Długość).");
-    }
-    
-    let Ng0 = getNg0(lambda_nm);
-    let res = getPPM(Ng0, t_dry, t_wet_str, p);
-    
+    if (isNaN(lambda_nm) || isNaN(t_dry) || isNaN(p) || isNaN(d0)) return alert("Wypełnij wymagane pola.");
+    let Ng0 = getNg0(lambda_nm); let res = getPPM(Ng0, t_dry, t_wet_str, p);
     let poprawka_mm = (d0 / 1000) * res.ppm;
     let d_skorygowane = d0 + (d0 * (res.ppm * 0.000001));
-    
     document.getElementById("atm_res_ng0").innerText = Ng0.toFixed(2);
     document.getElementById("atm_res_ng").innerText = res.n_gr.toFixed(2);
     document.getElementById("atm_res_ppm").innerText = res.ppm.toFixed(2) + " ppm";
@@ -325,40 +258,25 @@ function calcAtmosfera() {
 }
 
 function loadFileAtm(event) {
-    let file = event.target.files[0];
-    if (!file) return;
-    
+    let file = event.target.files[0]; if (!file) return;
     let lambda_nm = parseFloat(document.getElementById("atm_lambda").value);
-    if(isNaN(lambda_nm)) return alert("Najpierw podaj długość fali w zakładce 'Obliczenia'!");
+    if(isNaN(lambda_nm)) return alert("Podaj najpierw długość fali.");
     let Ng0 = getNg0(lambda_nm);
-    
-    let tbody = document.getElementById('atm_file_tbody');
-    tbody.innerHTML = '';
-    
+    let tbody = document.getElementById('atm_file_tbody'); tbody.innerHTML = '';
     let reader = new FileReader();
     reader.onload = function(e) {
         let lines = e.target.result.split(/\r?\n/);
         lines.forEach(line => {
             let parts = line.trim().split(/[\s,;]+/);
             if (parts.length >= 3) {
-                let D = parseFloat(parts[0].replace(',', '.'));
-                let ts = parseFloat(parts[1].replace(',', '.'));
-                let p, tm_str;
-                
-                if (parts.length === 3) { 
-                    tm_str = ""; 
-                    p = parseFloat(parts[2].replace(',', '.')); 
-                } else { 
-                    tm_str = parts[2].replace(',', '.'); 
-                    p = parseFloat(parts[3].replace(',', '.')); 
-                }
-                
+                let D = parseFloat(parts[0].replace(',', '.')), ts = parseFloat(parts[1].replace(',', '.')), p, tm_str;
+                if (parts.length === 3) { tm_str = ""; p = parseFloat(parts[2].replace(',', '.')); } 
+                else { tm_str = parts[2].replace(',', '.'); p = parseFloat(parts[3].replace(',', '.')); }
                 if(!isNaN(D) && !isNaN(ts) && !isNaN(p)) {
                     let res = getPPM(Ng0, ts, tm_str, p);
                     let d_corr = D + (D * (res.ppm * 0.000001));
-                    
                     let tr = document.createElement('tr');
-                    tr.innerHTML = `<td>${D.toFixed(3)}</td><td>${ts.toFixed(1)}</td><td>${tm_str==="" ? '-' : parseFloat(tm_str).toFixed(1)}</td><td>${p.toFixed(1)}</td><td>${res.e_val.toFixed(2)}</td><td>${res.ppm.toFixed(2)}</td><td style="color:blue; font-weight:bold;">${d_corr.toFixed(4)}</td>`;
+                    tr.innerHTML = `<td>${D.toFixed(3)}</td><td>${ts.toFixed(1)}</td><td>${tm_str==="" ? '-' : parseFloat(tm_str).toFixed(1)}</td><td>${p.toFixed(1)}</td><td>${res.e_val.toFixed(2)}</td><td>${res.ppm.toFixed(2)}</td><td style="color:#2e7d32; font-weight:bold;">${d_corr.toFixed(4)}</td>`;
                     tbody.appendChild(tr);
                 }
             }
@@ -372,38 +290,27 @@ let atmChart = null;
 function drawAtmChart() {
     let ctx = document.getElementById('atmCanvas').getContext('2d');
     let labels = []; let data = [];
-    for(let w = 400; w <= 1500; w += 50) {
-        labels.push(w);
-        data.push(getNg0(w));
-    }
-    
+    for(let w = 400; w <= 1500; w += 50) { labels.push(w); data.push(getNg0(w)); }
     if(atmChart) atmChart.destroy();
     atmChart = new Chart(ctx, {
         type: 'line',
-        data: { labels: labels, datasets: [{ label: 'Współczynnik Ng0', data: data, borderColor: '#2980b9', backgroundColor: 'rgba(41, 128, 185, 0.2)', borderWidth: 2, fill: true, tension: 0.4 }] },
-        options: { scales: { x: { title: { display: true, text: 'Długość fali λ (nm)' } }, y: { title: { display: true, text: 'Ng0' } } } }
+        data: { labels: labels, datasets: [{ label: 'Współczynnik Ng0', data: data, borderColor: '#2e7d32', backgroundColor: 'rgba(46, 125, 50, 0.2)', borderWidth: 2, fill: true, tension: 0.4 }] },
+        options: { scales: { x: { title: { display: true, text: 'λ (nm)' } }, y: { title: { display: true, text: 'Ng0' } } } }
     });
 }
 
-// --- IMPORT DANYCH (SERIAL API) ---
+// --- SERIAL API (TERMINAL) ---
 let port, reader, keepReading = true;
 async function connectSerial() {
     if ('serial' in navigator) {
         try {
             const baudRate = parseInt(document.getElementById('serialBaudRate').value);
-            const dataBits = parseInt(document.getElementById('serialDataBits').value);
-            const stopBits = parseInt(document.getElementById('serialStopBits').value);
-            const parity = document.getElementById('serialParity').value;
-            
             port = await navigator.serial.requestPort();
-            await port.open({ baudRate, dataBits, stopBits, parity });
-            
-            document.getElementById('btnConnect').disabled = true; 
-            document.getElementById('btnDisconnect').disabled = false;
-            keepReading = true; 
-            readLoop();
-        } catch (err) { alert('Błąd połączenia: ' + err.message); }
-    } else { alert('Twoja przeglądarka nie obsługuje Web Serial API.'); }
+            await port.open({ baudRate, dataBits: 8, stopBits: 1, parity: 'none' });
+            document.getElementById('btnConnect').disabled = true; document.getElementById('btnDisconnect').disabled = false;
+            keepReading = true; readLoop();
+        } catch (err) { alert('Błąd: ' + err.message); }
+    } else { alert('Brak wsparcia Web Serial API w tej przeglądarce.'); }
 }
 async function readLoop() {
     while (port.readable && keepReading) {
@@ -413,79 +320,41 @@ async function readLoop() {
                 const { value, done } = await reader.read();
                 if (done) break;
                 const terminal = document.getElementById('serialTerminal');
-                terminal.value += new TextDecoder().decode(value); 
-                terminal.scrollTop = terminal.scrollHeight; 
+                terminal.value += new TextDecoder().decode(value); terminal.scrollTop = terminal.scrollHeight; 
             }
         } catch (error) {} finally { reader.releaseLock(); }
     }
 }
 async function disconnectSerial() {
-    keepReading = false; 
-    if (reader) await reader.cancel(); 
-    if (port) await port.close();
-    document.getElementById('btnConnect').disabled = false; 
-    document.getElementById('btnDisconnect').disabled = true;
-}
-function downloadSerialData() {
-    const text = document.getElementById('serialTerminal').value; 
-    if (!text) return alert("Terminal jest pusty.");
-    const a = document.createElement('a'); 
-    a.href = URL.createObjectURL(new Blob([text], { type: 'text/plain' })); 
-    a.download = 'odczyty.txt';
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    keepReading = false; if (reader) await reader.cancel(); if (port) await port.close();
+    document.getElementById('btnConnect').disabled = false; document.getElementById('btnDisconnect').disabled = true;
 }
 
-// --- ŁATA KODOWA (TOPCON) ---
+// --- ŁATA KODOWA ---
 function generateStaff() {
     let startM = parseFloat(document.getElementById('latStart').value);
     let endM = parseFloat(document.getElementById('latEnd').value);
-    
-    if(isNaN(startM) || isNaN(endM) || startM < 0 || endM > 4.0 || startM >= endM) {
-        return alert("Podaj poprawny zakres. Łata ma od 0 do 4.0 metrów.");
-    }
-
-    let start_mm = startM * 1000;
-    let end_mm = endM * 1000;
-    let tbody = document.getElementById('latTableBody');
-    tbody.innerHTML = '';
-    
-    let canvas = document.getElementById('latCanvas');
-    let ctx = canvas.getContext('2d');
-    let scaleY = 2; 
-    let staffWidth = 240; 
-    
-    canvas.width = staffWidth + 80; 
-    canvas.height = (end_mm - start_mm) * scaleY;
-    
-    ctx.fillStyle = "#f5e6a3"; 
-    ctx.fillRect(60, 0, staffWidth, canvas.height);
-    ctx.fillStyle = "#000000"; ctx.textAlign = "right"; ctx.textBaseline = "middle";
-
+    if(isNaN(startM) || isNaN(endM) || startM < 0 || endM > 4.0 || startM >= endM) return alert("Podaj zakres 0-4m.");
+    let start_mm = startM * 1000; let end_mm = endM * 1000;
+    let tbody = document.getElementById('latTableBody'); tbody.innerHTML = '';
+    let canvas = document.getElementById('latCanvas'); let ctx = canvas.getContext('2d');
+    let scaleY = 2; let staffWidth = 240; 
+    canvas.width = staffWidth + 80; canvas.height = (end_mm - start_mm) * scaleY;
+    ctx.fillStyle = "#f5e6a3"; ctx.fillRect(60, 0, staffWidth, canvas.height);
+    ctx.fillStyle = "#000"; ctx.textAlign = "right"; ctx.textBaseline = "middle";
     for(let n = 0; n <= 135; n++) {
-        let L_R = 30.00 * n;
-        let W_R = 8.00; 
-        let L_A = 30.00 * n + 10.00;
-        let W_A = 5.00 + 4.00 * Math.cos( (2 * Math.PI * (30.00 * n + 21.25)) / 330.00 );
-        let L_B = 30.00 * n + 20.00;
-        let W_B = 5.00 + 4.00 * Math.cos( (2 * Math.PI * (30.00 * n + 35.00)) / 300.00 );
-
-        let lines = [ { type: 'R', pos: L_R, width: W_R }, { type: 'A', pos: L_A, width: W_A }, { type: 'B', pos: L_B, width: W_B } ];
-
+        let L_R = 30 * n;
+        let lines = [ { type: 'R', pos: L_R, width: 8 }, { type: 'A', pos: 30*n+10, width: 5+4*Math.cos((2*Math.PI*(30*n+21.25))/330) }, { type: 'B', pos: 30*n+20, width: 5+4*Math.cos((2*Math.PI*(30*n+35))/300) } ];
         lines.forEach(line => {
             if(line.pos >= start_mm && line.pos <= end_mm) {
                 let tr = document.createElement('tr');
-                tr.innerHTML = `<td>${n}</td><td><strong>${line.type}</strong></td><td>${line.pos.toFixed(2)}</td><td>${line.width.toFixed(3)}</td>`;
+                tr.innerHTML = `<td>${n}</td><td>${line.type}</td><td>${line.pos.toFixed(2)}</td><td>${line.width.toFixed(3)}</td>`;
                 tbody.appendChild(tr);
-
-                let y_center_px = canvas.height - ((line.pos - start_mm) * scaleY);
-                let line_height_px = line.width * scaleY;
-                
-                ctx.fillStyle = "#2c3e50";
-                ctx.fillRect(60, y_center_px - (line_height_px / 2), staffWidth, line_height_px);
-
+                let y_px = canvas.height - ((line.pos - start_mm) * scaleY);
+                ctx.fillStyle = "#1b5e20"; ctx.fillRect(60, y_px - (line.width * scaleY / 2), staffWidth, line.width * scaleY);
                 if (line.type === 'R' && line.pos % 100 === 0) {
-                    ctx.fillStyle = "#e74c3c"; ctx.font = "bold 16px Consolas";
-                    ctx.fillText((line.pos / 1000).toFixed(1) + "m", 50, y_center_px);
+                    ctx.fillStyle = "#1b5e20"; ctx.font = "bold 14px Arial";
+                    ctx.fillText((line.pos / 1000).toFixed(1) + "m", 50, y_px);
                 }
             }
         });
@@ -495,7 +364,7 @@ function generateStaff() {
 </head>
 <body onload="addKolimacjaRow(); addInklinacjaRow();">
 
-<h1>Kalkulator Geodezyjny - Wersja Pro</h1>
+<h1>Kalkulator Geodezyjny</h1>
 
 <div class="tab">
   <button class="tablinks active" onclick="switchTab(event, 'Kolimacja')">Kolimacja</button>
@@ -508,175 +377,119 @@ function generateStaff() {
 <div id="Kolimacja" class="tabcontent" style="display:block;">
     <h2>1. Obliczenia Kolimacji</h2>
     <div class="panel">
-        <strong>Wczytaj z pliku (CSV/TXT - format: KL KP):</strong><br><br>
+        <strong>Wczytaj z pliku (KL KP):</strong><br><br>
         <input type="file" accept=".txt,.csv" onchange="loadFileCol(event)">
     </div>
     <table id="kolimacja_table">
-        <thead>
-            <tr>
-                <th>Seria</th><th>Odczyt KL [g]</th><th>Odczyt KP [g]</th><th>Kolimacja (c) [cc]</th><th>v</th><th>vv</th><th>Akcja</th>
-            </tr>
-        </thead>
+        <thead><tr><th>Seria</th><th>KL [g]</th><th>KP [g]</th><th>c [cc]</th><th>v</th><th>vv</th><th>Akcja</th></tr></thead>
         <tbody></tbody>
     </table>
-    
     <button class="btn" onclick="addKolimacjaRow()">+ Dodaj Serię</button>
     <button class="btn btn-success" onclick="calcKolimacja()">Oblicz Kolimację</button>
-    
-    <div class="panel" style="margin-top: 20px;">
+    <div class="panel" style="margin-top:20px;">
         <h3>Wyniki:</h3>
-        <b>Średnia kolimacja:</b> <span id="k_mean_c" style="color:red; font-weight:bold;">-</span><br>
-        <b>Błąd kolimacji (mc):</b> <span id="k_m_c" style="color:red; font-weight:bold;">-</span>
+        <b>Średnia kolimacja:</b> <span id="k_mean_c" style="color:#1b5e20; font-weight:bold;">-</span><br>
+        <b>Błąd (mc):</b> <span id="k_m_c" style="color:#1b5e20; font-weight:bold;">-</span>
     </div>
-
     <div class="panel">
         <h3>2. Odczyt bezkolimacyjny</h3>
-        Kąt poziomy (H') [g]: <input type="number" step="any" id="k_input_hz" value="159.9900"><br><br>
-        Kąt pionowy (z') [g]: <input type="number" step="any" id="k_input_v" value="100.0000"><br><br>
-        <button class="btn btn-success" onclick="correctAnglesCol()">Oblicz Poprawiony Odczyt Hz</button><br><br>
-        <b>Poprawiony kąt Hz:</b> <span id="k_corrected_hz" style="color:blue; font-size:18px; font-weight:bold;">-</span>
+        H' [g]: <input type="number" id="k_input_hz" value="159.9900">
+        z' [g]: <input type="number" id="k_input_v" value="100.0000">
+        <button class="btn btn-success" onclick="correctAnglesCol()">Oblicz Poprawiony Hz</button><br><br>
+        <b>Hz poprawione:</b> <span id="k_corrected_hz" style="color:#2e7d32; font-weight:bold; font-size:18px;">-</span>
     </div>
 </div>
 
 <div id="Inklinacja" class="tabcontent">
-    <h2>1. Obliczenia Inklinacji (cel wysoki)</h2>
+    <h2>Obliczenia Inklinacji (cel wysoki)</h2>
     <div class="panel">
-        <div class="grid-2">
-            <div>
-                <strong>Kąt zenitalny do celu wysokiego (z) [g]:</strong><br>
-                <input type="number" step="any" id="ink_z" value="81.9768">
-            </div>
-            <div>
-                <strong>Kolimacja z zakładki nr 1 (c/mc) [cc]:</strong><br>
-                <input type="number" step="any" id="ink_kolimacja_input" value="0">
-                <input type="number" step="any" id="ink_m_c_input" value="0" placeholder="błąd mc">
-            </div>
-        </div>
-        <br>
-        <strong>Wczytaj cele wysokie z pliku (KL KP):</strong><br>
-        <input type="file" accept=".txt,.csv" onchange="loadFileInc(event)">
+        z [g]: <input type="number" id="ink_z" value="81.9768">
+        c [cc]: <input type="number" id="ink_kolimacja_input" value="0">
+        mc [cc]: <input type="number" id="ink_m_c_input" value="0">
     </div>
-
     <table id="inklinacja_table">
-        <thead>
-            <tr>
-                <th>Cel</th><th>Odczyt KL [g]</th><th>Odczyt KP [g]</th><th>v</th><th>vv</th><th>Akcja</th>
-            </tr>
-        </thead>
+        <thead><tr><th>Cel</th><th>KL [g]</th><th>KP [g]</th><th>v</th><th>vv</th><th>Akcja</th></tr></thead>
         <tbody></tbody>
     </table>
-    
     <button class="btn" onclick="addInklinacjaRow()">+ Dodaj Cel</button>
     <button class="btn btn-success" onclick="calcInklinacja()">Oblicz Inklinację</button>
-
-    <div class="panel" style="margin-top: 20px;">
-        <h3>Wyniki:</h3>
-        <b>Inklinacja (i):</b> <span id="i_mean" style="color:red; font-weight:bold;">-</span><br>
-        <b>Błąd inklinacji (mi):</b> <span id="i_error" style="color:red; font-weight:bold;">-</span>
-    </div>
-
     <div class="panel">
-        <h3>2. Pełna poprawka kąta</h3>
-        Kąt poziomy (H') [g]: <input type="number" step="any" id="i_input_hz"><br><br>
-        Kąt zenitalny na cel (z) [g]: <input type="number" step="any" id="i_input_v"><br><br>
-        <button class="btn btn-success" onclick="correctAnglesInc()">Oblicz Poprawiony Kąt</button><br><br>
-        <b>Z pełnymi poprawkami Hz:</b> <span id="i_corrected_hz" style="color:blue; font-size:18px; font-weight:bold;">-</span>
+        <b>i:</b> <span id="i_mean" style="color:#1b5e20; font-weight:bold;">-</span> | 
+        <b>mi:</b> <span id="i_error" style="color:#1b5e20; font-weight:bold;">-</span>
+    </div>
+    <div class="panel">
+        <h3>Pełna poprawka kąta</h3>
+        H' [g]: <input type="number" id="i_input_hz">
+        z [g]: <input type="number" id="i_input_v">
+        <button class="btn btn-success" onclick="correctAnglesInc()">Popraw Hz</button>
+        <b>Hz (popr.):</b> <span id="i_corrected_hz" style="color:#2e7d32; font-weight:bold;">-</span>
     </div>
 </div>
 
 <div id="Atmosfera" class="tabcontent">
-    <h2>Korekcja Atmosferyczna dalmierza EDM</h2>
+    <h2>Korekcja Atmosferyczna</h2>
     <div class="sub-tab">
-      <button class="sub-tablinks active" onclick="switchSubTab(event, 'Atm_Obliczenia')">1. Obliczenia</button>
-      <button class="sub-tablinks" onclick="switchSubTab(event, 'Atm_Plik')">2. Wczytaj z Pliku</button>
-      <button class="sub-tablinks" onclick="switchSubTab(event, 'Atm_Wykres')">3. Wykres Ng0</button>
+      <button class="sub-tablinks active" onclick="switchSubTab(event, 'Atm_Obliczenia')">Obliczenia</button>
+      <button class="sub-tablinks" onclick="switchSubTab(event, 'Atm_Plik')">Wczytaj Plik</button>
+      <button class="sub-tablinks" onclick="switchSubTab(event, 'Atm_Wykres')">Wykres Ng0</button>
     </div>
-
     <div id="Atm_Obliczenia" class="sub-tabcontent" style="display:block;">
         <div class="grid-2">
             <div class="panel">
-                <h3>Parametry Środowiska</h3>
-                Długość fali λ [nm]: <input type="number" id="atm_lambda" value="900"><br><br>
-                Temp. sucha t_s [°C]: <input type="number" step="any" id="atm_t_dry" value="15"><br><br>
-                Temp. mokra t_m [°C] <i>(opcj.)</i>: <input type="number" step="any" id="atm_t_wet" placeholder="puste=0 wilg."><br><br>
-                Ciśnienie p [hPa]: <input type="number" step="any" id="atm_p" value="1013.25"><br><br>
-                Zmierzona odległość D [m]: <input type="number" step="any" id="atm_d0" value="1000"><br><br>
-                <button class="btn btn-warning" onclick="calcAtmosfera()">Oblicz Poprawkę</button>
+                λ [nm]: <input type="number" id="atm_lambda" value="900"><br><br>
+                t_s [°C]: <input type="number" id="atm_t_dry" value="15"><br><br>
+                t_m [°C]: <input type="number" id="atm_t_wet" placeholder="opcjonalnie"><br><br>
+                p [hPa]: <input type="number" id="atm_p" value="1013.25"><br><br>
+                D [m]: <input type="number" id="atm_d0" value="1000"><br><br>
+                <button class="btn btn-warning" onclick="calcAtmosfera()">Oblicz</button>
             </div>
             <div class="panel">
-                <h3>Wyniki</h3>
-                Współ. dyspersji Ng0: <b id="atm_res_ng0" style="color:#2980b9;">-</b><br><br>
-                Ng rzeczywisty: <b id="atm_res_ng">-</b><br><br>
-                Poprawka: <b id="atm_res_ppm" style="color:red;">-</b><br><br>
-                Delta D: <b id="atm_res_poprawka">-</b><br><hr>
-                <b>Poprawiona długość:</b> <span id="atm_res_d_corr" style="color:blue; font-size:18px;">-</span>
+                Ng0: <b id="atm_res_ng0">-</b><br>
+                Ng rzeczywiste: <b id="atm_res_ng">-</b><br>
+                Poprawka: <b id="atm_res_ppm" style="color:#1b5e20;">-</b><br><hr>
+                <b>Poprawiona długość D:</b> <span id="atm_res_d_corr" style="color:#2e7d32; font-size:18px;">-</span>
             </div>
         </div>
     </div>
-
     <div id="Atm_Plik" class="sub-tabcontent">
         <div class="panel">
-            <h3>Wczytaj plik (D, t_s, [t_m], p)</h3>
-            <p>Zwróć uwagę, aby długość fali λ była podana w pierwszej zakładce (Obliczenia).</p>
             <input type="file" accept=".txt,.csv" onchange="loadFileAtm(event)"><br><br>
             <table id="atm_file_table" style="display:none;">
-                <thead><tr><th>D [m]</th><th>t_s [°C]</th><th>t_m [°C]</th><th>p [hPa]</th><th>e [hPa]</th><th>Poprawka [ppm]</th><th>Poprawione D [m]</th></tr></thead>
+                <thead><tr><th>D [m]</th><th>t_s</th><th>t_m</th><th>p</th><th>e</th><th>ppm</th><th>D popr.</th></tr></thead>
                 <tbody id="atm_file_tbody"></tbody>
             </table>
         </div>
     </div>
-
     <div id="Atm_Wykres" class="sub-tabcontent">
-        <div class="panel">
-            <h3>Wykres dyspersji (Ng0 względem λ 400-1500 nm)</h3>
-            <canvas id="atmCanvas" width="600" height="300" style="margin-top:20px;"></canvas>
-        </div>
+        <canvas id="atmCanvas" width="600" height="300"></canvas>
     </div>
 </div>
 
 <div id="Import" class="tabcontent">
-    <h2>Bezpośredni Odbiór z Instrumentu (Web Serial)</h2>
-    <div class="panel" style="border-left-color:#1abc9c;">
-        <div class="grid-2">
-            <div>
-                <div class="settings-row"><label>Baud rate: </label><select id="serialBaudRate"><option value="1200">1200</option><option value="4800">4800</option><option value="9600" selected>9600</option><option value="115200">115200</option></select></div>
-                <div class="settings-row"><label>Data bits: </label><select id="serialDataBits"><option value="7">7</option><option value="8" selected>8</option></select></div>
-            </div>
-            <div>
-                <div class="settings-row"><label>Stop bits: </label><select id="serialStopBits"><option value="1" selected>1</option><option value="2">2</option></select></div>
-                <div class="settings-row"><label>Parity: </label><select id="serialParity"><option value="none" selected>none</option><option value="even">even</option><option value="odd">odd</option></select></div>
-            </div>
-        </div>
-        <button id="btnConnect" class="btn" style="background-color:#1abc9c;" onclick="connectSerial()">Połącz z kablem</button>
+    <h2>Odbiór z instrumentu</h2>
+    <div class="panel">
+        Baud rate: <select id="serialBaudRate"><option value="9600">9600</option><option value="115200">115200</option></select>
+        <button id="btnConnect" class="btn btn-success" onclick="connectSerial()">Połącz</button>
         <button id="btnDisconnect" class="btn btn-danger" onclick="disconnectSerial()" disabled>Rozłącz</button>
     </div>
-    
-    <div class="panel">
-        <h3>Terminal Live</h3>
-        <textarea id="serialTerminal" class="terminal" readonly placeholder="Oczekiwanie na dane z portu COM..."></textarea><br>
-        <button class="btn btn-warning" onclick="document.getElementById('serialTerminal').value = ''">Wyczyść</button>
-        <button class="btn btn-success" onclick="downloadSerialData()">💾 Zapisz do pliku TXT</button>
-    </div>
+    <textarea id="serialTerminal" class="terminal" readonly></textarea>
 </div>
 
 <div id="Lata" class="tabcontent">
-    <h2>Generator łaty inwarowej Topcon RAB</h2>
-    <div class="panel" style="border-left-color:#f39c12;">
-        Od [m]: <input type="number" id="latStart" step="0.1" value="0.0"> &nbsp; 
-        Do [m]: <input type="number" id="latEnd" step="0.1" value="1.0"> &nbsp;
-        <button class="btn btn-warning" onclick="generateStaff()">Rysuj łatę</button>
+    <h2>Generator łaty RAB</h2>
+    <div class="panel">
+        Od [m]: <input type="number" id="latStart" value="0.0">
+        Do [m]: <input type="number" id="latEnd" value="1.0">
+        <button class="btn btn-warning" onclick="generateStaff()">Generuj</button>
     </div>
-    
     <div class="lat-container">
         <div class="lat-table">
             <table id="latTable">
-                <thead><tr><th>n</th><th>Kreska</th><th>Oś [mm]</th><th>Szerokość [mm]</th></tr></thead>
+                <thead><tr><th>n</th><th>Typ</th><th>Oś [mm]</th><th>W [mm]</th></tr></thead>
                 <tbody id="latTableBody"></tbody>
             </table>
         </div>
-        <div class="lat-canvas-box">
-            <canvas id="latCanvas"></canvas>
-        </div>
+        <div class="lat-canvas-box"><canvas id="latCanvas"></canvas></div>
     </div>
 </div>
 
