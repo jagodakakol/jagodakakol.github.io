@@ -4,144 +4,244 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kalkulator geodezyjny</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-    /* ZMIENNE CSS - PALETA JASNA (DOMYŚLNA) */
+    /* =====================================================================
+       PALETA „INŻYNIERSKI GRAFIT + AKCENT" — TRYB JASNY (DOMYŚLNY)
+       Nazwy zmiennych zachowane z poprzedniej wersji, by nie ruszać JS.
+       --green-* = teraz odcienie grafitu, --accent/soft-yellow = bursztyn.
+    ===================================================================== */
     :root {
-        --green-dark: #1B4332;       /* Główne nagłówki, tło zakładek */
-        --green-medium: #2D6A4F;     /* Przyciski, podtytuły */
-        --green-light: #D8F3DC;      /* Tła nagłówków tabel */
-        --accent-yellow: #FFD60A;    /* Aktywna zakładka, przyciski akcji */
-        --soft-yellow: #FFF9DB;      /* Pola wyników */
-        --error-color: #e74c3c;      /* Kolor błędów */
-        
-        --text-main: #1B4332;
-        --text-muted: #666666;
-        
-        --bg-body: #F8F9FA;          /* Tło strony */
-        --bg-container: #ffffff;     /* Tło głównego kontenera */
-        --bg-panel: #ffffff;         /* Tło paneli */
-        --bg-input: #ffffff;         /* Tło inputów */
-        
-        --border-color: #E9ECEF;
-        --table-even: #fafbfc;       /* Tło parzystych wierszy */
-        
+        --green-dark: #1F2933;       /* Grafit – nagłówki, pasek górny */
+        --green-medium: #3E4C59;     /* Grafit średni – przyciski, podtytuły */
+        --green-light: #EEF1F4;      /* Jasne tło nagłówków tabel */
+        --accent: #F5A623;           /* Bursztynowy akcent */
+        --accent-dark: #D9881A;      /* Akcent – hover */
+        --accent-yellow: var(--accent);
+        --soft-yellow: #FDF3E2;      /* Delikatne tło pól wyników */
+        --error-color: #D64545;      /* Kolor błędów / wyników krytycznych */
+        --ok-color: #2E7D5B;         /* Kolor wartości poprawnych */
+
+        --text-main: #1F2933;
+        --text-muted: #7B8794;
+
+        --bg-body: #ECEFF1;          /* Tło strony */
+        --bg-container: #FFFFFF;     /* Tło głównego kontenera */
+        --bg-panel: #FFFFFF;         /* Tło paneli */
+        --bg-input: #FFFFFF;         /* Tło inputów */
+        --bg-subtle: #F7F9FA;        /* Delikatne tło sekcji */
+
+        --border-color: #DCE1E6;
+        --table-even: #F7F9FA;
+
         --tab-bg: var(--green-dark);
-        --tab-text: rgba(255, 255, 255, 0.8);
-        --tab-active-text: var(--green-dark);
-        --btn-text: #ffffff;
-        --font-main: 'Roboto', sans-serif; /* Przypisanie nowej czcionki */
+        --tab-text: rgba(255, 255, 255, 0.72);
+        --tab-active-text: #1F2933;
+        --btn-text: #FFFFFF;
+        --accent-text: #1F2933;      /* Tekst na akcencie (ciemny dla kontrastu) */
+
+        --shadow-sm: 0 1px 2px rgba(15,23,42,0.06);
+        --shadow-md: 0 4px 16px rgba(15,23,42,0.08);
+        --radius: 0;
+        --font-main: 'IBM Plex Sans', 'Segoe UI', Arial, sans-serif;
+        --font-mono: 'IBM Plex Mono', 'Consolas', 'Courier New', monospace;
     }
 
-    /* ZMIENNE CSS - PALETA CIEMNA */
+    /* ===================== PALETA – TRYB CIEMNY ===================== */
     body.dark-mode {
-        --green-dark: #74C69D;       /* Jasny zielony do nagłówków dla kontrastu */
-        --green-medium: #52B788;     /* Zielony do przycisków */
-        --green-light: #122a20;      /* Bardzo ciemny zielony na tło nagłówków tabel */
-        --accent-yellow: #FFD60A;    /* Żółty zostaje bez zmian */
-        --soft-yellow: #332b00;      /* Ciemno-żółty do paneli z wynikami */
-        --error-color: #ff6b6b;      /* Jaśniejszy czerwony */
-        
-        --text-main: #E9ECEF;
-        --text-muted: #A0AEC0;
-        
-        --bg-body: #121212;          /* Czarne tło */
-        --bg-container: #1E1E1E;     /* Ciemnoszare tło kontenera */
-        --bg-panel: #262626;         /* Tło paneli lekko jaśniejsze */
-        --bg-input: #333333;         /* Tło inputów */
-        
-        --border-color: #3f3f3f;
-        --table-even: #212121;
-        
-        --tab-bg: #0d1a14;           /* Bardzo ciemne tło paska zakładek */
+        --green-dark: #CBD2D9;       /* Jasny grafit do nagłówków */
+        --green-medium: #9AA5B1;     /* Grafit jasny – podtytuły */
+        --green-light: #1F2933;      /* Ciemne tło nagłówków tabel */
+        --accent: #F5A623;
+        --accent-dark: #FFB938;
+        --accent-yellow: var(--accent);
+        --soft-yellow: #2E2716;
+        --error-color: #FF6B6B;
+        --ok-color: #5FD0A0;
+
+        --text-main: #E4E7EB;
+        --text-muted: #9AA5B1;
+
+        --bg-body: #14181D;
+        --bg-container: #1C2127;
+        --bg-panel: #232A31;
+        --bg-input: #2B333B;
+        --bg-subtle: #1F252B;
+
+        --border-color: #323B44;
+        --table-even: #1F252B;
+
+        --tab-bg: #11151A;
         --tab-text: rgba(255, 255, 255, 0.7);
-        --tab-active-text: #121212;
-        --btn-text: #121212;
+        --tab-active-text: #14181D;
+        --btn-text: #14181D;
+        --accent-text: #14181D;
+
+        --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
+        --shadow-md: 0 4px 16px rgba(0,0,0,0.45);
     }
 
-    body { font-family: var(--font-main); padding: 0; margin: 0; background-color: var(--bg-body); color: var(--text-main); transition: background-color 0.3s, color 0.3s; }
-    
-    /* ZAKŁADKI NA GÓRZE */
-    .tab { 
-        overflow: hidden; 
-        background-color: var(--tab-bg); 
-        display: flex; 
+    * { box-sizing: border-box; }
+    body { font-family: var(--font-main); padding: 0; margin: 0; background-color: var(--bg-body); color: var(--text-main); transition: background-color 0.3s, color 0.3s; line-height: 1.5; }
+
+    /* ===================== PASEK GÓRNY / BRANDING ===================== */
+    .topbar {
+        background: linear-gradient(180deg, var(--green-dark), color-mix(in srgb, var(--green-dark) 88%, #000));
+        color: #fff;
+        padding: 14px 28px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        border-bottom: 3px solid var(--accent);
+    }
+    body.dark-mode .topbar { background: #0E1216; }
+    .brand-logo {
+        width: 42px; height: 42px; flex-shrink: 0;
+        display: grid; place-items: center;
+        background: var(--accent); color: #1F2933;
+        border-radius: 0; font-weight: 700; font-size: 22px;
+        box-shadow: var(--shadow-sm);
+    }
+    .brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+    .brand-text .title { font-size: 19px; font-weight: 700; letter-spacing: 0.3px; color: #fff; }
+    .brand-text .subtitle { font-size: 12px; font-weight: 400; color: rgba(255,255,255,0.65); text-transform: uppercase; letter-spacing: 1px; }
+
+    /* ===================== ZAKŁADKI NA GÓRZE ===================== */
+    .tab {
+        background-color: var(--tab-bg);
+        display: flex;
         justify-content: flex-start;
         flex-wrap: wrap;
-        padding: 0 10px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        padding: 0 16px;
+        box-shadow: var(--shadow-md);
         position: sticky;
         top: 0;
         z-index: 1000;
         transition: background-color 0.3s;
     }
-    .tab button { 
-        background-color: transparent; 
-        border: none; 
-        outline: none; 
-        cursor: pointer; 
-        padding: 16px 24px; 
-        transition: 0.3s; 
-        font-size: 14px; 
-        font-weight: 500; /* Minimalnie cieńsza dla Roboto, by wyglądało smuklej */
-        color: var(--tab-text); 
+    .tab button {
+        background-color: transparent;
+        border: none;
+        border-bottom: 3px solid transparent;
+        outline: none;
+        cursor: pointer;
+        padding: 15px 22px;
+        transition: 0.2s;
+        font-size: 13.5px;
+        font-weight: 500;
+        color: var(--tab-text);
         text-transform: uppercase;
         letter-spacing: 0.5px;
         font-family: var(--font-main);
     }
-    .tab button:hover { background-color: rgba(255,255,255,0.1); color: #fff; }
-    .tab button.active { background-color: var(--accent-yellow); color: var(--tab-active-text); font-weight: 700; }
-    
+    .tab button:hover { background-color: rgba(255,255,255,0.07); color: #fff; }
+    .tab button.active { color: #fff; border-bottom: 3px solid var(--accent); font-weight: 700; background-color: rgba(245,166,35,0.08); }
+    .tab .tab-ico { margin-right: 7px; opacity: 0.9; }
+
     /* Przycisk trybu ciemnego */
-    .theme-toggle { margin-left: auto; border-left: 1px solid rgba(255,255,255,0.1); }
-    
-    .container { max-width: 1100px; margin: 40px auto; background: var(--bg-container); padding: 40px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: background-color 0.3s; }
-    h1 { color: var(--green-dark); text-align: center; margin-top: 0; border-bottom: 2px solid var(--border-color); padding-bottom: 20px; font-weight: 700; font-size: 32px; letter-spacing: 0.5px; transition: color 0.3s, border-color 0.3s;}
-    h2 { color: var(--green-medium); margin-bottom: 20px; font-weight: 500; transition: color 0.3s;}
-    h3.step-title { color: var(--green-dark); border-left: 4px solid var(--accent-yellow); padding-left: 12px; margin-top: 5px; margin-bottom: 20px; font-size: 1.17em; transition: color 0.3s;}
-    
-    .input-row { display: flex; align-items: center; margin-bottom: 15px; max-width: 550px; }
-    .input-row label { flex: 1; font-size: 15px; font-weight: 500; }
-    .input-row input { width: 140px; padding: 8px 12px; background-color: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 4px; text-align: left; font-size: 14px; transition: 0.3s; font-family: var(--font-main);}
-    .input-row input:focus { border-color: var(--green-medium); outline: none; box-shadow: 0 0 5px rgba(45, 106, 79, 0.3); }
+    .theme-toggle {
+        margin-left: auto;
+        border-left: 1px solid rgba(255,255,255,0.12);
+        font-size: 12.5px !important;
+        letter-spacing: 0.3px;
+    }
+    .theme-toggle:hover { border-bottom-color: transparent !important; }
 
-    .tabcontent { display: none; animation: fadeIn 0.4s; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    
-    .sub-tab { overflow: hidden; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); }
-    .sub-tab button { background-color: transparent; float: left; border: none; outline: none; cursor: pointer; padding: 10px 20px; transition: 0.3s; font-size: 14px; color: var(--text-muted); font-weight: 500; font-family: var(--font-main);}
-    .sub-tab button.active { color: var(--green-dark); font-weight: 700; border-bottom: 3px solid var(--accent-yellow); }
-    .sub-tabcontent { display: none; padding: 15px 0; }
+    /* ===================== KONTENER ===================== */
+    .container { max-width: 1140px; margin: 32px auto; background: var(--bg-container); padding: 36px 40px; border-radius: var(--radius); box-shadow: var(--shadow-md); border: 1px solid var(--border-color); transition: background-color 0.3s, border-color 0.3s; }
+    h1 { display: none; }
+    h2 {
+        color: var(--green-dark); margin: 0 0 22px; font-weight: 700; font-size: 21px;
+        padding-bottom: 14px; border-bottom: 1px solid var(--border-color);
+        display: flex; align-items: center; gap: 10px;
+        transition: color 0.3s, border-color 0.3s;
+    }
+    h2::before {
+        content: ""; width: 4px; height: 22px; border-radius: 0;
+        background: var(--accent); flex-shrink: 0;
+    }
+    h3 { color: var(--green-dark); font-weight: 700; font-size: 16px; margin-top: 0; }
+    h3.step-title { color: var(--green-dark); border-left: 4px solid var(--accent); padding-left: 12px; margin-top: 5px; margin-bottom: 20px; font-size: 1.1em; transition: color 0.3s;}
 
-    table { border-collapse: collapse; width: 100%; margin-top: 10px; margin-bottom: 15px; background: var(--bg-container); border-radius: 6px; overflow: hidden; border: 1px solid var(--border-color); transition: background-color 0.3s, border-color 0.3s;}
-    th, td { border-bottom: 1px solid var(--border-color); padding: 12px; text-align: center; transition: border-color 0.3s;}
-    th { background-color: var(--green-light); color: var(--green-dark); position: sticky; top: 0; font-weight: 700; font-size: 13px; text-transform: uppercase; transition: background-color 0.3s, color 0.3s;}
+    /* ===================== FORMULARZE ===================== */
+    .input-row { display: flex; align-items: center; margin-bottom: 14px; max-width: 560px; gap: 14px; }
+    .input-row label { flex: 1; font-size: 14px; font-weight: 500; color: var(--text-main); }
+    .input-row input { width: 150px; padding: 9px 12px; background-color: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 0; text-align: left; font-size: 14px; transition: 0.2s; font-family: var(--font-mono);}
+    .input-row input:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px rgba(245,166,35,0.18); }
+
+    .tabcontent { display: none; animation: fadeIn 0.35s; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px);} to { opacity: 1; transform: none; } }
+
+    .sub-tab { overflow: hidden; margin-bottom: 18px; border-bottom: 1px solid var(--border-color); display: flex; }
+    .sub-tab button { background-color: transparent; border: none; border-bottom: 3px solid transparent; outline: none; cursor: pointer; padding: 11px 18px; transition: 0.2s; font-size: 14px; color: var(--text-muted); font-weight: 500; font-family: var(--font-main); margin-bottom: -1px;}
+    .sub-tab button:hover { color: var(--green-dark); }
+    .sub-tab button.active { color: var(--green-dark); font-weight: 700; border-bottom: 3px solid var(--accent); }
+    .sub-tabcontent { display: none; padding: 5px 0; }
+
+    /* ===================== TABELE ===================== */
+    table { border-collapse: collapse; width: 100%; margin-top: 10px; margin-bottom: 16px; background: var(--bg-container); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border-color); transition: background-color 0.3s, border-color 0.3s;}
+    th, td { border-bottom: 1px solid var(--border-color); padding: 11px 12px; text-align: center; transition: border-color 0.3s; font-size: 14px;}
+    td { font-family: var(--font-mono); }
+    th { background-color: var(--green-light); color: var(--green-dark); position: sticky; top: 0; font-weight: 700; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.5px; font-family: var(--font-main); transition: background-color 0.3s, color 0.3s;}
     tr:nth-child(even) { background-color: var(--table-even); transition: background-color 0.3s; }
-    
-    input[type="text"]:not(.input-row input), input[type="number"]:not(.input-row input), select { width: 120px; padding: 8px; background-color: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 4px; text-align: center; transition: 0.3s; font-family: var(--font-main);}
-    input[type="number"]:focus:not(.input-row input), select:focus { border-color: var(--green-medium); outline: none; box-shadow: 0 0 5px rgba(45, 106, 79, 0.3); }
-    
-    .btn { background-color: var(--green-medium); color: var(--btn-text); border: none; padding: 10px 20px; cursor: pointer; border-radius: 6px; font-size: 14px; margin: 5px 0; font-weight: 500; transition: background 0.3s, transform 0.1s; font-family: var(--font-main);}
-    .btn:hover { background-color: var(--green-dark); transform: translateY(-1px);}
-    .btn-danger { background-color: #e74c3c; color: #fff; padding: 6px 12px; font-size: 12px;}
-    .btn-danger:hover { background-color: #c0392b; }
-    .btn-secondary { background-color: #95a5a6; color: #fff; }
-    .btn-secondary:hover { background-color: #7f8c8d; }
-    .btn-action { width: 100%; font-size: 16px; padding: 14px; background-color: var(--accent-yellow); color: #111; font-weight: 500;}
-    .btn-action:hover { background-color: #e6c200; }
-    
-    .panel { background: var(--bg-panel); padding: 25px; border: 1px solid var(--border-color); border-left: 5px solid var(--green-medium); margin-bottom: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); transition: background-color 0.3s, border-color 0.3s;}
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .results-highlight { color: var(--green-dark); font-size: 18px; font-weight: 700; background: var(--soft-yellow); padding: 4px 8px; border-radius: 4px; transition: background-color 0.3s, color 0.3s;}
-    
-    .terminal { width: 100%; height: 250px; background-color: #1a252f; color: #2ecc71; font-family: 'Courier New', Courier, monospace; padding: 15px; border-radius: 6px; resize: vertical; box-sizing: border-box; border: none;}
+    tbody tr:hover { background-color: rgba(245,166,35,0.07); }
+
+    input[type="text"]:not(.input-row input), input[type="number"]:not(.input-row input), select { width: 120px; padding: 8px 10px; background-color: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 0; text-align: center; transition: 0.2s; font-family: var(--font-mono); font-size: 13.5px;}
+    input[type="number"]:focus:not(.input-row input), select:focus, input[type="text"]:focus:not(.input-row input) { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px rgba(245,166,35,0.18); }
+    input[type="file"] { font-family: var(--font-main); font-size: 13px; color: var(--text-muted); }
+
+    /* ===================== PRZYCISKI ===================== */
+    .btn { background-color: var(--green-medium); color: var(--btn-text); border: none; padding: 10px 20px; cursor: pointer; border-radius: 0; font-size: 14px; margin: 5px 0; font-weight: 600; transition: background 0.2s, transform 0.1s, box-shadow 0.2s; font-family: var(--font-main); box-shadow: var(--shadow-sm);}
+    .btn:hover { background-color: var(--green-dark); transform: translateY(-1px); box-shadow: var(--shadow-md);}
+    .btn:active { transform: translateY(0); }
+    .btn-danger { background-color: var(--error-color); color: #fff; padding: 6px 12px; font-size: 12px;}
+    .btn-danger:hover { background-color: #b83838; }
+    .btn-secondary { background-color: transparent; color: var(--green-dark); border: 1px solid var(--border-color); box-shadow: none; }
+    .btn-secondary:hover { background-color: var(--bg-subtle); color: var(--green-dark); border-color: var(--accent); }
+    .btn-action { width: 100%; font-size: 15px; padding: 13px; background-color: var(--accent); color: var(--accent-text); font-weight: 700; letter-spacing: 0.3px;}
+    .btn-action:hover { background-color: var(--accent-dark); }
+
+    /* ===================== PANELE / KARTY ===================== */
+    .panel { background: var(--bg-panel); padding: 24px; border: 1px solid var(--border-color); border-left: 4px solid var(--accent); margin-bottom: 22px; border-radius: var(--radius); box-shadow: var(--shadow-sm); transition: background-color 0.3s, border-color 0.3s;}
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .results-highlight { display: inline-block; color: var(--ok-color); font-size: 20px; font-weight: 700; background: var(--soft-yellow); padding: 8px 16px; border-radius: 0; font-family: var(--font-mono); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); transition: background-color 0.3s, color 0.3s;}
+
+    .terminal { width: 100%; height: 250px; background-color: #0E1419; color: #5FD0A0; font-family: var(--font-mono); padding: 16px; border-radius: var(--radius); resize: vertical; box-sizing: border-box; border: 1px solid var(--border-color); font-size: 13px; line-height: 1.6;}
     .settings-row { margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;}
-    
+    .settings-row label { font-size: 14px; color: var(--text-main); }
+
     .lat-container { display: flex; gap: 20px; flex-wrap: wrap; }
-    .lat-table { flex: 1; max-height: 500px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 6px; transition: border-color 0.3s;}
-    .lat-canvas-box { flex: 1; text-align: center; background: var(--bg-panel); border: 1px solid var(--border-color); padding: 20px; max-height: 500px; overflow-y: auto; border-radius: 6px; transition: background-color 0.3s, border-color 0.3s;}
-    canvas { box-shadow: 0 4px 8px rgba(0,0,0,0.1); background: #fff; }
+    .lat-table { flex: 1; min-width: 280px; max-height: 500px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--radius); transition: border-color 0.3s;}
+    .lat-canvas-box { flex: 1; min-width: 280px; text-align: center; background: var(--bg-subtle); border: 1px solid var(--border-color); padding: 20px; max-height: 500px; overflow-y: auto; border-radius: var(--radius); transition: background-color 0.3s, border-color 0.3s;}
+    canvas { box-shadow: var(--shadow-sm); background: #fff; border-radius: 0; }
+
+    /* ===================== STOPKA ===================== */
+    .site-footer {
+        max-width: 1140px; margin: 0 auto 40px; padding: 18px 40px;
+        display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+        color: var(--text-muted); font-size: 12.5px;
+    }
+    .site-footer .badge { background: var(--bg-container); border: 1px solid var(--border-color); border-radius: 0; padding: 4px 12px; font-family: var(--font-mono); }
+
+    /* ===================== RESPONSYWNOŚĆ ===================== */
+    @media (max-width: 760px) {
+        .container { margin: 16px; padding: 22px 18px; }
+        .grid-2 { grid-template-columns: 1fr; }
+        .tab { padding: 0 6px; }
+        .tab button { padding: 13px 12px; font-size: 12px; }
+        .input-row { flex-wrap: wrap; }
+        .topbar { padding: 12px 16px; }
+        .site-footer { padding: 14px 18px; }
+    }
+
+    /* ===================== DRUK ===================== */
+    @media print {
+        .tab, .theme-toggle, .btn, .btn-action, input[type="file"], .site-footer { display: none !important; }
+        body { background: #fff; }
+        .container { box-shadow: none; border: none; margin: 0; max-width: 100%; }
+        .panel { break-inside: avoid; box-shadow: none; }
+    }
 </style>
 
 <script>
@@ -184,7 +284,7 @@ function addKolimacjaRow(o1 = '', o2 = '') {
     let table = document.getElementById("kolimacja_table").getElementsByTagName('tbody')[0];
     let row = table.insertRow();
     row.id = "k_row_" + kolimacjaRowCount;
-    
+
     row.insertCell(0).innerText = kolimacjaRowCount + 1;
     row.insertCell(1).innerHTML = `<input type="number" step="any" id="k_o1_${kolimacjaRowCount}" value="${o1}">`;
     row.insertCell(2).innerHTML = `<input type="number" step="any" id="k_o2_${kolimacjaRowCount}" value="${o2}">`;
@@ -192,7 +292,7 @@ function addKolimacjaRow(o1 = '', o2 = '') {
     row.insertCell(4).innerHTML = `<span id="k_v_${kolimacjaRowCount}">-</span>`;
     row.insertCell(5).innerHTML = `<span id="k_vv_${kolimacjaRowCount}">-</span>`;
     row.insertCell(6).innerHTML = `<button class="btn btn-danger" onclick="removeRow('k_row_${kolimacjaRowCount}')">Usuń</button>`;
-    
+
     kolimacjaRowCount++;
 }
 
@@ -205,27 +305,27 @@ function calcKolimacja() {
     let c_values = [];
     let table = document.getElementById("kolimacja_table").getElementsByTagName('tbody')[0];
     let rows = table.rows;
-    
+
     for (let i = 0; i < rows.length; i++) {
         let id_num = rows[i].id.split('_')[2];
         let o1 = parseFloat(document.getElementById("k_o1_" + id_num).value);
         let o2 = parseFloat(document.getElementById("k_o2_" + id_num).value);
-        
+
         if (!isNaN(o1) && !isNaN(o2)) {
-            let diff = o2 - o1; 
-            if (diff < 0) diff += 400; 
-            let c = ((diff - 200) / 2) * 10000; 
+            let diff = o2 - o1;
+            if (diff < 0) diff += 400;
+            let c = ((diff - 200) / 2) * 10000;
             c_values.push({id: id_num, c: c});
             document.getElementById("k_c_" + id_num).innerText = c.toFixed(2);
         }
     }
-    
+
     if (c_values.length === 0) return alert("Brak poprawnych danych do obliczenia kolimacji!");
 
     let sum_c = 0;
     c_values.forEach(item => sum_c += item.c);
     let mean_c = sum_c / c_values.length;
-    
+
     let sum_vv = 0;
     c_values.forEach(item => {
         let v = item.c - mean_c;
@@ -234,13 +334,13 @@ function calcKolimacja() {
         document.getElementById("k_v_" + item.id).innerText = v.toFixed(2);
         document.getElementById("k_vv_" + item.id).innerText = vv.toFixed(2);
     });
-    
+
     let n = c_values.length;
     let m_c = n > 1 ? Math.sqrt(sum_vv / (n * (n - 1))) : 0;
-    
+
     document.getElementById("k_mean_c").innerText = mean_c.toFixed(2) + " cc";
     document.getElementById("k_m_c").innerText = m_c.toFixed(2) + " cc";
-    
+
     document.getElementById("ink_kolimacja_input").value = mean_c.toFixed(2);
     document.getElementById("ink_m_c_input").value = m_c.toFixed(2);
     window.currentKolimacjaCC = mean_c;
@@ -250,16 +350,16 @@ function correctAnglesCol() {
     let hz = parseFloat(document.getElementById("k_input_hz").value);
     let v = parseFloat(document.getElementById("k_input_v").value);
     let c_cc = window.currentKolimacjaCC || 0;
-    
+
     if (isNaN(hz) || isNaN(v)) return alert("Wprowadź poprawne kąty Hz i V.");
-    
-    let v_rad = v * Math.PI / 200; 
+
+    let v_rad = v * Math.PI / 200;
     let poprawka = (c_cc / 10000) / Math.sin(v_rad);
-    let hz_corr = hz + poprawka; 
-    
-    if (hz_corr >= 400) hz_corr -= 400; 
+    let hz_corr = hz + poprawka;
+
+    if (hz_corr >= 400) hz_corr -= 400;
     if (hz_corr < 0) hz_corr += 400;
-    
+
     document.getElementById("k_corrected_hz").innerText = hz_corr.toFixed(4) + " g";
 }
 
@@ -287,14 +387,14 @@ function addInklinacjaRow(o1 = '', o2 = '') {
     let table = document.getElementById("inklinacja_table").getElementsByTagName('tbody')[0];
     let row = table.insertRow();
     row.id = "i_row_" + inklinacjaRowCount;
-    
+
     row.insertCell(0).innerText = "Cel Wysoki";
     row.insertCell(1).innerHTML = `<input type="number" step="any" id="i_o1_${inklinacjaRowCount}" value="${o1}">`;
     row.insertCell(2).innerHTML = `<input type="number" step="any" id="i_o2_${inklinacjaRowCount}" value="${o2}">`;
     row.insertCell(3).innerHTML = `<span id="i_v_${inklinacjaRowCount}">-</span>`;
     row.insertCell(4).innerHTML = `<span id="i_vv_${inklinacjaRowCount}">-</span>`;
     row.insertCell(5).innerHTML = `<button class="btn btn-danger" onclick="removeRow('i_row_${inklinacjaRowCount}')">Usuń</button>`;
-    
+
     inklinacjaRowCount++;
 }
 
@@ -320,22 +420,22 @@ function calcInklinacja() {
     let z_grad = parseFloat(document.getElementById("ink_z").value);
     let c_cc = parseFloat(document.getElementById("ink_kolimacja_input").value) || 0;
     let m_c_cc = parseFloat(document.getElementById("ink_m_c_input").value) || 0;
-    
+
     if (isNaN(z_grad)) return alert("Podaj kąt zenitalny Z.");
-    
+
     let z_rad = z_grad * Math.PI / 200;
     let tanZ = Math.tan(z_rad);
     let cosZ = Math.cos(z_rad);
-    
+
     let table = document.getElementById("inklinacja_table").getElementsByTagName('tbody')[0];
     let rows = table.rows;
     let e_values = [];
-    
+
     for (let idx = 0; idx < rows.length; idx++) {
         let id_num = rows[idx].id.split('_')[2];
         let o1 = parseFloat(document.getElementById("i_o1_" + id_num).value);
         let o2 = parseFloat(document.getElementById("i_o2_" + id_num).value);
-        
+
         if (!isNaN(o1) && !isNaN(o2)) {
             let diff = o2 - o1;
             if (diff < 0) diff += 400;
@@ -343,13 +443,13 @@ function calcInklinacja() {
             e_values.push({id: id_num, e: e_cc});
         }
     }
-    
+
     if (e_values.length === 0) return alert("Brak danych do obliczenia inklinacji!");
-    
+
     let sum_e = 0;
     e_values.forEach(item => sum_e += item.e);
     let mean_e = sum_e / e_values.length;
-    
+
     let sum_vv = 0;
     e_values.forEach(item => {
         let v = item.e - mean_e;
@@ -358,16 +458,16 @@ function calcInklinacja() {
         document.getElementById("i_v_" + item.id).innerText = v.toFixed(2);
         document.getElementById("i_vv_" + item.id).innerText = vv.toFixed(2);
     });
-    
+
     let n = e_values.length;
     let m_odcz = n > 1 ? Math.sqrt(sum_vv / (n * (n - 1))) : 0;
-    
+
     let i_cc = (mean_e * tanZ) - (c_cc / cosZ);
     let m_i_cc = Math.sqrt(Math.pow(tanZ, 2) * Math.pow(m_odcz, 2) + Math.pow(1/cosZ, 2) * Math.pow(m_c_cc, 2));
-    
+
     document.getElementById("i_mean").innerText = i_cc.toFixed(2) + " cc";
     document.getElementById("i_error").innerText = m_i_cc.toFixed(2) + " cc";
-    
+
     window.currentInklinacjaCC = i_cc;
 }
 
@@ -376,34 +476,34 @@ function correctAnglesInc() {
     let v = parseFloat(document.getElementById("i_input_v").value);
     let c_cc = parseFloat(document.getElementById("ink_kolimacja_input").value) || 0;
     let i_cc = window.currentInklinacjaCC || 0;
-    
+
     if (isNaN(hz) || isNaN(v)) return alert("Wprowadź poprawne kąty Hz i V.");
-    
-    let v_rad = v * Math.PI / 200; 
+
+    let v_rad = v * Math.PI / 200;
     let hz_corr = hz + ((c_cc/10000) / Math.sin(v_rad)) + ((i_cc/10000) / Math.tan(v_rad));
-    
-    if (hz_corr >= 400) hz_corr -= 400; 
+
+    if (hz_corr >= 400) hz_corr -= 400;
     if (hz_corr < 0) hz_corr += 400;
-    
+
     document.getElementById("i_corrected_hz").innerText = hz_corr.toFixed(4) + " g";
 }
 
-function getNg0(lambda_nm) { 
-    let L = lambda_nm / 1000; 
-    return 287.6155 + (4.8866 / Math.pow(L, 2)) + (0.0680 / Math.pow(L, 4)); 
+function getNg0(lambda_nm) {
+    let L = lambda_nm / 1000;
+    return 287.6155 + (4.8866 / Math.pow(L, 2)) + (0.0680 / Math.pow(L, 4));
 }
 
-function getPPM(Ng0, t_dry, t_wet_str, p) { 
+function getPPM(Ng0, t_dry, t_wet_str, p) {
     let T = t_dry + 273.15;
     let e = 0;
-    if (t_wet_str !== "" && !isNaN(parseFloat(t_wet_str))) { 
+    if (t_wet_str !== "" && !isNaN(parseFloat(t_wet_str))) {
         let tm = parseFloat(t_wet_str);
-        let Ewm = 6.1078 * Math.exp((17.269 * tm) / (237.30 + tm)); 
-        e = Ewm - 0.000662 * p * (t_dry - tm); 
+        let Ewm = 6.1078 * Math.exp((17.269 * tm) / (237.30 + tm));
+        e = Ewm - 0.000662 * p * (t_dry - tm);
     }
-    let N_gr = (Ng0 * 0.269578 * (p / T)) - (11.27 * (e / T)); 
+    let N_gr = (Ng0 * 0.269578 * (p / T)) - (11.27 * (e / T));
     let N_gs = (Ng0 * 0.269578 * (1013.25 / 288.15)) - (11.27 * (10.87 / 288.15));
-    return { ppm: N_gs - N_gr, e_val: e, n_gr: N_gr }; 
+    return { ppm: N_gs - N_gr, e_val: e, n_gr: N_gr };
 }
 
 function calcAtmosfera() {
@@ -412,17 +512,17 @@ function calcAtmosfera() {
     let t_wet_str = document.getElementById("atm_t_wet").value;
     let p = parseFloat(document.getElementById("atm_p").value);
     let d0 = parseFloat(document.getElementById("atm_d0").value);
-    
+
     if (isNaN(lambda_nm) || isNaN(t_dry) || isNaN(p) || isNaN(d0)) {
         return alert("Wypełnij wymagane pola (Długość fali, Temp, Ciśnienie, Długość).");
     }
-    
+
     let Ng0 = getNg0(lambda_nm);
     let res = getPPM(Ng0, t_dry, t_wet_str, p);
-    
+
     let poprawka_mm = (d0 / 1000) * res.ppm;
     let d_skorygowane = d0 + (d0 * (res.ppm * 0.000001));
-    
+
     document.getElementById("atm_res_ng0").innerText = Ng0.toFixed(2);
     document.getElementById("atm_res_ng").innerText = res.n_gr.toFixed(2);
     document.getElementById("atm_res_ppm").innerText = res.ppm.toFixed(2) + " ppm";
@@ -433,14 +533,14 @@ function calcAtmosfera() {
 function loadFileAtm(event) {
     let file = event.target.files[0];
     if (!file) return;
-    
+
     let lambda_nm = parseFloat(document.getElementById("atm_lambda").value);
     if(isNaN(lambda_nm)) return alert("Najpierw podaj długość fali w zakładce 'Obliczenia'!");
     let Ng0 = getNg0(lambda_nm);
-    
+
     let tbody = document.getElementById('atm_file_tbody');
     tbody.innerHTML = '';
-    
+
     let reader = new FileReader();
     reader.onload = function(e) {
         let lines = e.target.result.split(/\r?\n/);
@@ -450,21 +550,21 @@ function loadFileAtm(event) {
                 let D = parseFloat(parts[0].replace(',', '.'));
                 let ts = parseFloat(parts[1].replace(',', '.'));
                 let p, tm_str;
-                
-                if (parts.length === 3) { 
-                    tm_str = ""; 
-                    p = parseFloat(parts[2].replace(',', '.')); 
-                } else { 
-                    tm_str = parts[2].replace(',', '.'); 
-                    p = parseFloat(parts[3].replace(',', '.')); 
+
+                if (parts.length === 3) {
+                    tm_str = "";
+                    p = parseFloat(parts[2].replace(',', '.'));
+                } else {
+                    tm_str = parts[2].replace(',', '.');
+                    p = parseFloat(parts[3].replace(',', '.'));
                 }
-                
+
                 if(!isNaN(D) && !isNaN(ts) && !isNaN(p)) {
                     let res = getPPM(Ng0, ts, tm_str, p);
                     let d_corr = D + (D * (res.ppm * 0.000001));
-                    
+
                     let tr = document.createElement('tr');
-                    tr.innerHTML = `<td>${D.toFixed(3)}</td><td>${ts.toFixed(1)}</td><td>${tm_str==="" ? '-' : parseFloat(tm_str).toFixed(1)}</td><td>${p.toFixed(1)}</td><td>${res.e_val.toFixed(2)}</td><td>${res.ppm.toFixed(2)}</td><td style="color: var(--green-medium); font-weight:bold;">${d_corr.toFixed(4)}</td>`;
+                    tr.innerHTML = `<td>${D.toFixed(3)}</td><td>${ts.toFixed(1)}</td><td>${tm_str==="" ? '-' : parseFloat(tm_str).toFixed(1)}</td><td>${p.toFixed(1)}</td><td>${res.e_val.toFixed(2)}</td><td>${res.ppm.toFixed(2)}</td><td style="color: var(--accent-dark); font-weight:bold;">${d_corr.toFixed(4)}</td>`;
                     tbody.appendChild(tr);
                 }
             }
@@ -482,12 +582,12 @@ function drawAtmChart() {
         labels.push(w);
         data.push(getNg0(w));
     }
-    
-    // Dynamiczny wybór koloru wykresu na podstawie aktualnego trybu
+
+    // Akcent bursztynowy dla obu trybów
     let isDark = document.body.classList.contains('dark-mode');
-    let chartColor = isDark ? '#52B788' : '#2D6A4F';
-    let chartBg = isDark ? 'rgba(82, 183, 136, 0.2)' : 'rgba(45, 106, 79, 0.2)';
-    
+    let chartColor = '#F5A623';
+    let chartBg = isDark ? 'rgba(245, 166, 35, 0.18)' : 'rgba(245, 166, 35, 0.15)';
+
     if(atmChart) atmChart.destroy();
     atmChart = new Chart(ctx, {
         type: 'line',
@@ -504,14 +604,14 @@ async function connectSerial() {
             const dataBits = parseInt(document.getElementById('serialDataBits').value);
             const stopBits = parseInt(document.getElementById('serialStopBits').value);
             const parity = document.getElementById('serialParity').value;
-            
+
             port = await navigator.serial.requestPort();
             await port.open({ baudRate, dataBits, stopBits, parity });
-            
-            document.getElementById('btnConnect').disabled = true; 
+
+            document.getElementById('btnConnect').disabled = true;
             document.getElementById('btnConnect').style.backgroundColor = '#95a5a6';
             document.getElementById('btnDisconnect').disabled = false;
-            keepReading = true; 
+            keepReading = true;
             readLoop();
         } catch (err) { alert('Błąd połączenia: ' + err.message); }
     } else { alert('Twoja przeglądarka nie obsługuje Web Serial API.'); }
@@ -524,25 +624,25 @@ async function readLoop() {
                 const { value, done } = await reader.read();
                 if (done) break;
                 const terminal = document.getElementById('serialTerminal');
-                terminal.value += new TextDecoder().decode(value); 
-                terminal.scrollTop = terminal.scrollHeight; 
+                terminal.value += new TextDecoder().decode(value);
+                terminal.scrollTop = terminal.scrollHeight;
             }
         } catch (error) {} finally { reader.releaseLock(); }
     }
 }
 async function disconnectSerial() {
-    keepReading = false; 
-    if (reader) await reader.cancel(); 
+    keepReading = false;
+    if (reader) await reader.cancel();
     if (port) await port.close();
-    document.getElementById('btnConnect').disabled = false; 
+    document.getElementById('btnConnect').disabled = false;
     document.getElementById('btnConnect').style.backgroundColor = 'var(--green-medium)';
     document.getElementById('btnDisconnect').disabled = true;
 }
 function downloadSerialData() {
-    const text = document.getElementById('serialTerminal').value; 
+    const text = document.getElementById('serialTerminal').value;
     if (!text) return alert("Terminal jest pusty.");
-    const a = document.createElement('a'); 
-    a.href = URL.createObjectURL(new Blob([text], { type: 'text/plain' })); 
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([text], { type: 'text/plain' }));
     a.download = 'odczyty.txt';
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
 }
@@ -550,7 +650,7 @@ function downloadSerialData() {
 function generateStaff() {
     let startM = parseFloat(document.getElementById('latStart').value);
     let endM = parseFloat(document.getElementById('latEnd').value);
-    
+
     if(isNaN(startM) || isNaN(endM) || startM < 0 || endM > 4.0 || startM >= endM) {
         return alert("Podaj poprawny zakres. Łata ma od 0 do 4.0 metrów.");
     }
@@ -559,22 +659,22 @@ function generateStaff() {
     let end_mm = endM * 1000;
     let tbody = document.getElementById('latTableBody');
     tbody.innerHTML = '';
-    
+
     let canvas = document.getElementById('latCanvas');
     let ctx = canvas.getContext('2d');
-    let scaleY = 2; 
-    let staffWidth = 240; 
-    
-    canvas.width = staffWidth + 80; 
+    let scaleY = 2;
+    let staffWidth = 240;
+
+    canvas.width = staffWidth + 80;
     canvas.height = (end_mm - start_mm) * scaleY;
-    
-    ctx.fillStyle = "#fcf3cf"; 
+
+    ctx.fillStyle = "#fcf3cf";
     ctx.fillRect(60, 0, staffWidth, canvas.height);
     ctx.fillStyle = "#000000"; ctx.textAlign = "right"; ctx.textBaseline = "middle";
 
     for(let n = 0; n <= 135; n++) {
         let L_R = 30.00 * n;
-        let W_R = 8.00; 
+        let W_R = 8.00;
         let L_A = 30.00 * n + 10.00;
         let W_A = 5.00 + 4.00 * Math.cos( (2 * Math.PI * (30.00 * n + 21.25)) / 330.00 );
         let L_B = 30.00 * n + 20.00;
@@ -591,7 +691,7 @@ function generateStaff() {
 
                 let y_center_px = canvas.height - ((line.pos - start_mm) * scaleY);
                 ctx.fillStyle = "#2c3e50";
-                
+
                 if (line.type === 'R') {
                     let blockW_px = 2 * scaleY;
                     ctx.fillRect(60, y_center_px + (3 * scaleY) - (blockW_px / 2), staffWidth, blockW_px);
@@ -603,7 +703,7 @@ function generateStaff() {
                 }
 
                 if (line.type === 'R' && line.pos % 100 === 0) {
-                    ctx.fillStyle = "#2D6A4F"; ctx.font = "bold 16px Consolas";
+                    ctx.fillStyle = "#1F2933"; ctx.font = "bold 16px Consolas";
                     ctx.fillText((line.pos / 1000).toFixed(1) + "m", 50, y_center_px);
                 }
             }
@@ -614,12 +714,20 @@ function generateStaff() {
 </head>
 <body onload="addKolimacjaRow(); addInklinacjaRow();">
 
+<div class="topbar">
+    <div class="brand-logo">⌖</div>
+    <div class="brand-text">
+        <span class="title">Kalkulator geodezyjny</span>
+        <span class="subtitle">Korekcje instrumentalne i atmosferyczne</span>
+    </div>
+</div>
+
 <div class="tab">
-    <button class="tablinks active" onclick="switchTab(event, 'Kolimacja')">Kolimacja</button>
-    <button class="tablinks" onclick="switchTab(event, 'Inklinacja')">Inklinacja</button>
-    <button class="tablinks" onclick="switchTab(event, 'Atmosfera')">Atmosfera</button>
-    <button class="tablinks" onclick="switchTab(event, 'Import')">Import danych</button>
-    <button class="tablinks" onclick="switchTab(event, 'Lata')">Łata kodowa</button>
+    <button class="tablinks active" onclick="switchTab(event, 'Kolimacja')"><span class="tab-ico">⊕</span>Kolimacja</button>
+    <button class="tablinks" onclick="switchTab(event, 'Inklinacja')"><span class="tab-ico">∡</span>Inklinacja</button>
+    <button class="tablinks" onclick="switchTab(event, 'Atmosfera')"><span class="tab-ico">☼</span>Atmosfera</button>
+    <button class="tablinks" onclick="switchTab(event, 'Import')"><span class="tab-ico">⇄</span>Import danych</button>
+    <button class="tablinks" onclick="switchTab(event, 'Lata')"><span class="tab-ico">▤</span>Łata kodowa</button>
     <button class="theme-toggle" onclick="toggleTheme()">🌓 Tryb Ciemny</button>
 </div>
 
@@ -640,10 +748,10 @@ function generateStaff() {
             </thead>
             <tbody></tbody>
         </table>
-        
+
         <button class="btn btn-secondary" onclick="addKolimacjaRow()">+ Dodaj Serię ręcznie</button>
         <button class="btn btn-action" onclick="calcKolimacja()">Wyznacz Kolimację</button>
-        
+
         <div class="panel" style="margin-top: 20px;">
             <h3>Zestawienie błędów:</h3>
             <b>Średnia kolimacja (c):</b> <span id="k_mean_c" style="color: var(--error-color); font-weight:bold;">-</span><br>
@@ -680,7 +788,7 @@ function generateStaff() {
             </thead>
             <tbody></tbody>
         </table>
-        
+
         <button class="btn btn-secondary" onclick="addInklinacjaRow()">+ Dodaj Cel ręcznie</button>
 
         <div class="panel" style="margin-top: 20px;">
@@ -697,7 +805,7 @@ function generateStaff() {
                 <label>Błąd kolimacji (m<sub>c</sub>) [cc]:</label>
                 <input type="number" step="any" id="ink_m_c_input" value="0">
             </div>
-            
+
             <button class="btn btn-action" style="margin-top: 15px;" onclick="calcInklinacja()">Wyznacz Inklinację</button>
         </div>
 
@@ -795,7 +903,7 @@ function generateStaff() {
                 <button id="btnDisconnect" class="btn btn-danger" style="flex:1;" onclick="disconnectSerial()" disabled>Rozłącz port</button>
             </div>
         </div>
-        
+
         <div class="panel">
             <h3>Terminal Nasłuchu Live</h3>
             <textarea id="serialTerminal" class="terminal" readonly placeholder="Oczekiwanie na strumień danych z instrumentu..."></textarea><br>
@@ -809,11 +917,11 @@ function generateStaff() {
     <div id="Lata" class="tabcontent">
         <h2>Wizualizator i Generator Łaty Inwarowej (Kod RAB)</h2>
         <div class="panel">
-            Odcięta początkowa [m]: <input type="number" id="latStart" step="0.1" value="0.0"> &nbsp;&nbsp;&nbsp; 
+            Odcięta początkowa [m]: <input type="number" id="latStart" step="0.1" value="0.0"> &nbsp;&nbsp;&nbsp;
             Odcięta końcowa [m]: <input type="number" id="latEnd" step="0.1" value="1.0"> &nbsp;&nbsp;
             <button class="btn btn-action" style="width: auto; padding: 10px 20px;" onclick="generateStaff()">Generuj wycinek</button>
         </div>
-        
+
         <div class="lat-container">
             <div class="lat-table">
                 <table id="latTable">
@@ -828,6 +936,11 @@ function generateStaff() {
     </div>
 
 </div>
+
+<footer class="site-footer">
+    <span>Kalkulator geodezyjny · narzędzie do obliczeń terenowych</span>
+    <span class="badge">wer. 2.0</span>
+</footer>
 
 </body>
 </html>
